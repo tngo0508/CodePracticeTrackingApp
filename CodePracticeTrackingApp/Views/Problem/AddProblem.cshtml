@@ -1,0 +1,29 @@
+﻿@model Problem
+
+<h1>Add Problem</h1>
+<form method="post" class="row">
+    <div class="row">
+        <div class="col-6">
+            <div class="form-floating my-3">
+                <input asp-for="Title" type="text" class="form-control"/>
+                <label asp-for="Title"></label>
+                <span asp-validation-for="Title"></span>
+            </div>
+            <div class="form-floating my-3">
+                <input asp-for="Tag" type="text" class="form-control" />
+                <label asp-for="Tag"></label>
+                <span asp-validation-for="Tag"></span>
+            </div>
+            <div class="form-floating my-3">
+                <input asp-for="Frequency" type="text" class="form-control" />
+                <label asp-for="Frequency"></label>
+                <span asp-validation-for="Frequency"></span>
+            </div>
+            <div class="form-floating my-3">
+                <input asp-for="Difficulty" type="text" class="form-control" />
+                <label asp-for="Difficulty"></label>
+                <span asp-validation-for="Difficulty"></span>
+            </div>
+        </div>
+    </div>
+</form>
