@@ -3,44 +3,54 @@
 });
 
 function loadProblemTable() {
-    let maxFrequency = 
-    $('#problem').DataTable({
-        ajax: {
-            'url': '/problem/ProblemList',
-            'type': 'GET',
-            'datatype': 'json',
-            'dataSrc': function (json) {
-                maxFrequency = json.maxFrequency;
-                return json.data
-            }
-        },
-        columns: [
-            { data: 'title' },
-            { data: 'tag' },
-            { data: 'difficulty' },
-            {
-                data: 'frequency',
-                render: function (data, type, row, meta) {
-                    console.log(data)
-                    return `<progress value="${data}" max="${maxFrequency}"></progress>`
+    let maxFrequency =
+        $('#problem').DataTable({
+            ajax: {
+                'url': '/problem/ProblemList',
+                'type': 'GET',
+                'datatype': 'json',
+                'dataSrc': function (json) {
+                    maxFrequency = json.maxFrequency;
+                    return json.data
                 }
             },
-            { data: 'lastUpdate' },
-            {
-                data: 'id',
-                render: function (data, type) {
-                    return `<div class="w-75 btn-group" role="group">
+            columns: [
+                { data: 'title' },
+                { data: 'tag' },
+                {
+                    data: 'difficulty',
+                    render: function (data) {
+                        if (data.toLowerCase() === 'easy') {
+                            return `<span class="badge bg-success">${data}</span>`
+                        } else if (data.toLowerCase() === 'medium') {
+                            return `<span class="badge bg-warning">${data}</span>`
+                        } else {
+                            return `<span class="badge bg-danger">${data}</span>`
+                        }
+                    }
+                },
+                {
+                    data: 'frequency',
+                    render: function (data, type, row, meta) {
+                        return `<progress value="${data}" max="${maxFrequency}"></progress>`
+                    }
+                },
+                { data: 'lastUpdate' },
+                {
+                    data: 'id',
+                    render: function (data, type) {
+                        return `<div class="w-75 btn-group" role="group">
                         <a href="/problem/upsert?id=${data}" class="btn btn-primary mx-2">
-                            <i class="bi bi-pencil-square"></i> Edit
+                            <i class="bi bi-pencil-square"></i>
                         </a>
-                        <a onClick=Delete("/problem/delete/${data}") class="btn btn-danger mx-2">
-                            <i class="bi bi-trash-fill"></i> Delete
+                        <a href="/problem/delete/${data}" class="btn btn-danger mx-2">
+                            <i class="bi bi-trash-fill"></i>
                         </a>
                     </div>`
+                    }
                 }
-            }
-        ],
-        with: '100%'
-    });
+            ],
+            with: '100%'
+        });
 }
 

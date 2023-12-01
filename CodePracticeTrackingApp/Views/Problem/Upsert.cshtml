@@ -1,50 +1,52 @@
 ﻿@model ProblemVM
 
-<form method="post" class="row">
-    <input asp-for="Problem.Id" hidden /> @* need this to pass Id around for update operation *@
-    <div class="row">
-        <div class="col-6">
-            <div class="form-floating my-3">
-                <input asp-for="Problem.Title" type="text" class="form-control" />
-                <label asp-for="Problem.Title"></label>
-                <span asp-validation-for="Problem.Title" class="text-danger"></span>
-            </div>
-            <div class="form-floating my-3">
-                <input asp-for="Problem.Tag" type="text" class="form-control" />
-                <label asp-for="Problem.Tag"></label>
-                <span asp-validation-for="Problem.Tag" class="text-danger"></span>
-            </div>
-            <div class="form-floating my-3">
-                <input asp-for="Problem.Frequency" type="text" class="form-control" />
-                <label asp-for="Problem.Frequency"></label>
-                <span asp-validation-for="Problem.Frequency" class="text-danger"></span>
-            </div>
-            <div class="form-floating my-3">
-                <select asp-for="Problem.Difficulty" asp-items="@Model.DifficultyList" class="form-select">
-                    <option disabled selected>Select Level</option>
-                </select>
-                <label asp-for="Problem.Difficulty"></label>
-                <span asp-validation-for="Problem.Difficulty" class="text-danger"></span>
-            </div>
-            <hr />
-            <div class="row">
-                @if (Model.Problem.Id != 0)
-                {
-                    <div class="col-6">
-                        <button type="submit" class="btn btn-primary form-control">Update</button>
-                    </div>
-                }
-                else
-                {
-                    <div class="col-6">
-                        <button type="submit" class="btn btn-primary form-control">Add</button>
-                    </div>
-                }
+<div>
+    <form method="post" class="row">
+        <input asp-for="Problem.Id" hidden /> @* need this to pass Id around for update operation *@
+        <div class="row">
+            <div class="col-6">
+                <div class="form-floating my-3">
+                    <input asp-for="Problem.Title" type="text" class="form-control" />
+                    <label asp-for="Problem.Title"></label>
+                    <span asp-validation-for="Problem.Title" class="text-danger"></span>
+                </div>
+                <div class="form-floating my-3">
+                    <input asp-for="Problem.Tag" type="text" class="form-control" />
+                    <label asp-for="Problem.Tag"></label>
+                    <span asp-validation-for="Problem.Tag" class="text-danger"></span>
+                </div>
+                <div class="form-floating my-3">
+                    <input asp-for="Problem.Frequency" type="text" class="form-control" />
+                    <label asp-for="Problem.Frequency"></label>
+                    <span asp-validation-for="Problem.Frequency" class="text-danger"></span>
+                </div>
+                <div class="form-floating my-3">
+                    <select asp-for="Problem.Difficulty" asp-items="@Model.DifficultyList" class="form-select">
+                        <option disabled selected>Select Level</option>
+                    </select>
+                    <label asp-for="Problem.Difficulty"></label>
+                    <span asp-validation-for="Problem.Difficulty" class="text-danger"></span>
+                </div>
+                <hr />
+                <div class="row">
+                    @if (Model.Problem.Id != 0)
+                    {
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary form-control">Update</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary form-control">Add</button>
+                        </div>
+                    }
 
-                <div class="col-6">
-                    <a asp-controller="Problem" asp-action="Index" class="btn btn-secondary form-control">Back</a>
+                    <div class="col-6">
+                        <a asp-controller="Problem" asp-action="Index" class="btn btn-secondary form-control">Back</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
