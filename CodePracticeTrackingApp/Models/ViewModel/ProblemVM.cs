@@ -4,12 +4,12 @@ namespace CodePracticeTrackingApp.Models.ViewModel
 {
     public class ProblemVM
     {
-        public Problem Problem { get; set; }
+        public Problem Problem { get; set; } = new Problem();
         public IEnumerable<SelectListItem> DifficultyList { get; set; } = new List<SelectListItem>()
         {
-            new() { Value = "easy", Text = "Easy" },
-            new() { Value = "medium", Text = "Medium" },
-            new() { Value = "hard", Text = "Hard" }
+            new() { Value = "Easy", Text = "Easy" },
+            new() { Value = "Medium", Text = "Medium" },
+            new() { Value = "Hard", Text = "Hard" }
         };
     }
 }

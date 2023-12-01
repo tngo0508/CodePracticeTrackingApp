@@ -19,7 +19,7 @@ namespace CodePracticeTrackingApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Tag = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Frequency = table.Column<int>(type: "int", nullable: true),
+                    Frequency = table.Column<int>(type: "int", nullable: false),
                     Difficulty = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

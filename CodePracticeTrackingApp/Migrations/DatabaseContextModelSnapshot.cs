@@ -34,7 +34,7 @@ namespace CodePracticeTrackingApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Frequency")
+                    b.Property<int>("Frequency")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastUpdate")

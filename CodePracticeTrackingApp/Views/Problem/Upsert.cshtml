@@ -1,10 +1,11 @@
 ﻿@model ProblemVM
 
 <form method="post" class="row">
+    <input asp-for="Problem.Id" hidden /> @* need this to pass Id around for update operation *@
     <div class="row">
         <div class="col-6">
             <div class="form-floating my-3">
-                <input asp-for="Problem.Title" type="text" class="form-control"/>
+                <input asp-for="Problem.Title" type="text" class="form-control" />
                 <label asp-for="Problem.Title"></label>
                 <span asp-validation-for="Problem.Title" class="text-danger"></span>
             </div>
@@ -27,11 +28,21 @@
             </div>
             <hr />
             <div class="row">
+                @if (Model.Problem.Id != 0)
+                {
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary form-control">Update</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary form-control">Add</button>
+                    </div>
+                }
+
                 <div class="col-6">
-                    <button type="submit" class="btn btn-primary form-control">Add</button>
-                </div>
-                <div class="col-6">
-                    <a asp-controller="Problem" asp-action="Index" class="btn btn-secondary form-control">Back to Problem List</a>
+                    <a asp-controller="Problem" asp-action="Index" class="btn btn-secondary form-control">Back</a>
                 </div>
             </div>
         </div>

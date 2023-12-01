@@ -16,7 +16,8 @@ namespace CodePracticeTrackingApp.Models
         public string Title { get; set; }
         [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only alphabet is allowed")]
         public string? Tag { get; set; }
-        public int? Frequency { get; set; }
+        [DefaultValue(0)]
+        public int Frequency { get; set; } = 0;
         [Required(ErrorMessage = "This field is required")]
         public string Difficulty { get; set; }
         [DataType(DataType.Date)]
