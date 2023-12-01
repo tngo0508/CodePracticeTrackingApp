@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodePracticeTrackingApp.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231130223705_initDb")]
+    [Migration("20231201182613_initDb")]
     partial class initDb
     {
         /// <inheritdoc />
@@ -34,9 +34,10 @@ namespace CodePracticeTrackingApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Difficulty")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Frequency")
+                    b.Property<int>("Frequency")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastUpdate")

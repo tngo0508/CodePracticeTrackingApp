@@ -31,9 +31,10 @@ namespace CodePracticeTrackingApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Difficulty")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Frequency")
+                    b.Property<int>("Frequency")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastUpdate")

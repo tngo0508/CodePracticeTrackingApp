@@ -14,9 +14,6 @@ namespace CodePracticeTrackingApp.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Problem>().ToTable(nameof(Problem));
-            //modelBuilder.Entity<Problem>().HasData(
-            //    new { Id = 1, Title = "Two Sum" },
-            //    new { Id = 2, Title = "Maximum Subarray"}) ;
         }
     }
 }
