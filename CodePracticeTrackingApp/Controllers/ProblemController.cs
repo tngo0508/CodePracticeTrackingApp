@@ -1,6 +1,6 @@
 ﻿using CodePracticeTrackingApp.Data;
-using CodePracticeTrackingApp.Dto;
 using CodePracticeTrackingApp.Models;
+using CodePracticeTrackingApp.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Net;
@@ -29,19 +29,19 @@ namespace CodePracticeTrackingApp.Controllers
                 title = x.Title,
                 difficulty = x.Difficulty,
                 frequency = x.Frequency,
-                lastUpdate = x.LastUpdate.ToString("yyyy-MM-dd"),
+                lastUpdate = x.LastUpdate.ToString("yyyy-MM-dd hh:mm:ss"),
             });
             return Json(new { data = formattedProblems });
         }
 
         [HttpPost]
-        public IActionResult AddProblem(Problem problem)
+        public IActionResult AddProblem(ProblemVM problemVm)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    _databaseContext.Add(problem);
+                    _databaseContext.Add(problemVm.Problem);
                     _databaseContext.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
@@ -55,7 +55,8 @@ namespace CodePracticeTrackingApp.Controllers
 
         public IActionResult AddProblem()
         {
-            return View();
+            var problemVm = new ProblemVM();
+            return View(problemVm);
         }
     }
 }

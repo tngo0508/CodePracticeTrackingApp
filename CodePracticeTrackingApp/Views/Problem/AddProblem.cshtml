@@ -1,28 +1,28 @@
-﻿@model Problem
+﻿@model ProblemVM
 
-<h1>Add Problem</h1>
 <form method="post" class="row">
     <div class="row">
         <div class="col-6">
             <div class="form-floating my-3">
-                <input asp-for="Title" type="text" class="form-control"/>
-                <label asp-for="Title"></label>
-                <span asp-validation-for="Title"></span>
+                <input asp-for="Problem.Title" type="text" class="form-control"/>
+                <label asp-for="Problem.Title"></label>
+                <span asp-validation-for="Problem.Title"></span>
             </div>
             <div class="form-floating my-3">
-                <input asp-for="Tag" type="text" class="form-control" />
-                <label asp-for="Tag"></label>
-                <span asp-validation-for="Tag"></span>
+                <input asp-for="Problem.Tag" type="text" class="form-control" />
+                <label asp-for="Problem.Tag"></label>
+                <span asp-validation-for="Problem.Tag"></span>
             </div>
             <div class="form-floating my-3">
-                <input asp-for="Frequency" type="text" class="form-control" />
-                <label asp-for="Frequency"></label>
-                <span asp-validation-for="Frequency"></span>
+                <input asp-for="Problem.Frequency" type="text" class="form-control" />
+                <label asp-for="Problem.Frequency"></label>
+                <span asp-validation-for="Problem.Frequency"></span>
             </div>
             <div class="form-floating my-3">
-                <input asp-for="Difficulty" type="text" class="form-control" />
-                <label asp-for="Difficulty"></label>
-                <span asp-validation-for="Difficulty"></span>
+                <select asp-for="Problem.Difficulty" asp-items="@Model.DifficultyList" class="form-select">
+                    <option disabled selected>Select Level</option>
+                </select>
+                <label asp-for="Problem.Difficulty"></label>
             </div>
         </div>
     </div>
