@@ -20,7 +20,7 @@ namespace CodePracticeTrackingApp.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Tag = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Frequency = table.Column<int>(type: "int", nullable: true),
-                    Difficulty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Difficulty = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

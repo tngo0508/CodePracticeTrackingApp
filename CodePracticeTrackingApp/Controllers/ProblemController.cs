@@ -41,6 +41,7 @@ namespace CodePracticeTrackingApp.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    problemVm.Problem.LastUpdate = DateTime.Now;
                     _databaseContext.Add(problemVm.Problem);
                     _databaseContext.SaveChanges();
                     return RedirectToAction(nameof(Index));
@@ -50,7 +51,7 @@ namespace CodePracticeTrackingApp.Controllers
             {
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            return RedirectToAction(nameof(Problem));
+            return View(problemVm);
         }
 
         public IActionResult AddProblem()
