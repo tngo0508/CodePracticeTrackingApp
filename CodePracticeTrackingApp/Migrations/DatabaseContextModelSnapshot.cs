@@ -43,6 +43,9 @@ namespace CodePracticeTrackingApp.Migrations
                     b.Property<string>("Tag")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<TimeSpan?>("Timing")
+                        .HasColumnType("time");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

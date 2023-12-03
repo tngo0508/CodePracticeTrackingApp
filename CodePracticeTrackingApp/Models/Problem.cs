@@ -23,5 +23,6 @@ namespace CodePracticeTrackingApp.Models
         [DataType(DataType.Date)]
         [DisplayName("Last Update")]
         public DateTime LastUpdate { get; set; }
+        public TimeSpan? Timing { get; set; }
     }
 }

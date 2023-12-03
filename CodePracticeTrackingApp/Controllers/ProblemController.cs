@@ -2,6 +2,7 @@
 using CodePracticeTrackingApp.Models;
 using CodePracticeTrackingApp.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.Data;
 using System.Net;
 
@@ -31,6 +32,7 @@ namespace CodePracticeTrackingApp.Controllers
                     title = x.Title,
                     difficulty = x.Difficulty,
                     frequency = x.Frequency,
+                    timing = x.Timing.ToString(),
                     lastUpdate = x.LastUpdate.ToString("yyyy-MM-dd hh:mm:ss"),
                 });
                 var maxFrequency = formattedProblems.Max(x => x.frequency);
@@ -85,6 +87,40 @@ namespace CodePracticeTrackingApp.Controllers
             var problemVm = new ProblemVM { Problem = query.FirstOrDefault() };
             problemVm.Problem.Id = (int)id;
             return View(problemVm);
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest("id is null");
+            }
+            var problemFromDb = _databaseContext.Problems.Find(id);
+            if (problemFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(problemFromDb);
+        }
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeleteProblem(int? id)
+        {
+            try
+            {
+                var problem = _databaseContext.Problems.Find(id);
+                if (problem == null)
+                {
+                    return NotFound();
+                }
+                _databaseContext.Problems.Remove(problem);
+                _databaseContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString(), ex);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

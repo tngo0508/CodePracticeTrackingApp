@@ -21,7 +21,8 @@ namespace CodePracticeTrackingApp.Migrations
                     Tag = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Frequency = table.Column<int>(type: "int", nullable: false),
                     Difficulty = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Timing = table.Column<TimeSpan>(type: "time", nullable: true)
                 },
                 constraints: table =>
                 {
