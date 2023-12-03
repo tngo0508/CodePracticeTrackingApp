@@ -21,6 +21,11 @@
                     <span asp-validation-for="Problem.Frequency" class="text-danger"></span>
                 </div>
                 <div class="form-floating my-3">
+                    <input asp-for="Problem.Timing" type="time" id="userTime" name="userTime" class="form-control" />
+                    <label asp-for="Problem.Timing"></label>
+                    <span asp-validation-for="Problem.Timing" class="text-danger"></span>
+                </div>
+                <div class="form-floating my-3">
                     <select asp-for="Problem.Difficulty" asp-items="@Model.DifficultyList" class="form-select">
                         <option disabled selected>Select Level</option>
                     </select>
@@ -50,3 +55,15 @@
         </div>
     </form>
 </div>
+
+@section Scripts
+{
+    <script>
+        flatpickr("#userTime", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true
+        });
+    </script>
+}

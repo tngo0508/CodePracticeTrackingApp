@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodePracticeTrackingApp.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231201182613_initDb")]
+    [Migration("20231201235236_initDb")]
     partial class initDb
     {
         /// <inheritdoc />
@@ -45,6 +45,9 @@ namespace CodePracticeTrackingApp.Migrations
 
                     b.Property<string>("Tag")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan?>("Timing")
+                        .HasColumnType("time");
 
                     b.Property<string>("Title")
                         .IsRequired()

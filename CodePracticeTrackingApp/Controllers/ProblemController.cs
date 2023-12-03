@@ -32,6 +32,7 @@ namespace CodePracticeTrackingApp.Controllers
                     title = x.Title,
                     difficulty = x.Difficulty,
                     frequency = x.Frequency,
+                    timing = x.Timing.ToString(),
                     lastUpdate = x.LastUpdate.ToString("yyyy-MM-dd hh:mm:ss"),
                 });
                 var maxFrequency = formattedProblems.Max(x => x.frequency);
