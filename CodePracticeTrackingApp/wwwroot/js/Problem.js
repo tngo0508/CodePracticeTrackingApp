@@ -2,6 +2,12 @@
     loadProblemTable();
 });
 
+function createCharts(json) {
+    createFrequencyChart(json);
+    createDifficultyDistributionChart(json);
+    createtimingChart(json);
+}
+
 function loadProblemTable() {
     let maxFrequency =
         $('#problem').DataTable({
@@ -11,7 +17,8 @@ function loadProblemTable() {
                 'datatype': 'json',
                 'dataSrc': function (json) {
                     maxFrequency = json.maxFrequency;
-                    return json.data
+                    createCharts(json);
+                    return json.data;
                 }
             },
             columns: [
