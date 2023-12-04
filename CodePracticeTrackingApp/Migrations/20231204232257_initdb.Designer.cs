@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodePracticeTrackingApp.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231201235236_initDb")]
-    partial class initDb
+    [Migration("20231204232257_initdb")]
+    partial class initdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,8 +46,8 @@ namespace CodePracticeTrackingApp.Migrations
                     b.Property<string>("Tag")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan?>("Timing")
-                        .HasColumnType("time");
+                    b.Property<double>("Timing")
+                        .HasColumnType("float");
 
                     b.Property<string>("Title")
                         .IsRequired()

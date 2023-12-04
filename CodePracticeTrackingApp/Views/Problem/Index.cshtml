@@ -1,5 +1,5 @@
-﻿
-<div class="container">
+﻿<div class="container">
+    <h1>Problem List</h1>
     <a asp-controller="Problem" asp-action="Upsert" class="btn btn-primary float-end my-3">
         Add
     </a>
@@ -10,15 +10,35 @@
                 <th>Tag</th>
                 <th>Difficulty</th>
                 <th>Frequency</th>
-                <th>LastUpdate</th>
+                <th>Last Update</th>
                 <th>Timing</th>
                 <th>Action</th>
             </tr>
         </thead>
     </table>
+    <h1 class="my-3">Data Analysis</h1>
+    <div class="row">
+        <div class="col-8">
+            <button class="btn btn-primary float-end mx-3" id="toggleChart" onclick="toggleChartType()">Bar</button>
+            <button class="btn btn-primary float-end" onclick="resetZoom()">Reset Zoom</button>
+            <canvas id="frequencyChart"></canvas>
+        </div>
+        <div class="col-4">
+            <canvas id="difficultyChart"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <canvas id="timingChart"></canvas>
+        </div>
+        @* <div class="col-4">
+            <canvas id="difficultyChart"></canvas>
+        </div> *@
+    </div>
 </div>
 
 @section Scripts
 {
+    <script src="~/js/ChartData.js"></script>
     <script src="~/js/Problem.js"></script>
 }
