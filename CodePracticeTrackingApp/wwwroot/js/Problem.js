@@ -32,10 +32,13 @@ function loadProblemTable() {
                 {
                     data: 'frequency',
                     render: function (data, type, row, meta) {
-                        //return `<progress class="progress-bar bg-info" role="progressbar" value="${data}" max="${maxFrequency}"></progress>`
-                        return `<div class="progress">
+                        //return type === 'display'
+                        //    ? '<progress value="' + data + '" max="${maxFrequency}"></progress>'
+                        //    : data;
+                        //return `<progress class="progress-bar" role="progressbar" value="${data}" max="${maxFrequency}"></progress>`
+                        return type == 'display' ? `<div class="progress">
                                   <div class="progress-bar bg-info" role="progressbar" style="width: ${parseFloat(data) / parseFloat(maxFrequency) * 100}%;" aria-valuenow="${data}" aria-valuemin="0" aria-valuemax="${maxFrequency}"></div>
-                                </div>`
+                                </div>`: data;
                     }
                 },
                 { data: 'lastUpdate' },

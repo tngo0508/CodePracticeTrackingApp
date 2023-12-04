@@ -1,5 +1,5 @@
-﻿
-<div class="container">
+﻿<div class="container">
+    <h1>Problem List</h1>
     <a asp-controller="Problem" asp-action="Upsert" class="btn btn-primary float-end my-3">
         Add
     </a>
@@ -16,9 +16,14 @@
             </tr>
         </thead>
     </table>
+    <h1 class="my-3">Data Analysis</h1>
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
 </div>
 
 @section Scripts
 {
     <script src="~/js/Problem.js"></script>
+    <script src="~/js/ChartData.js"></script>
 }
