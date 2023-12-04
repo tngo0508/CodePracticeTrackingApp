@@ -21,7 +21,7 @@
                     <span asp-validation-for="Problem.Frequency" class="text-danger"></span>
                 </div>
                 <div class="form-floating my-3">
-                    <input asp-for="Problem.Timing" type="time" id="userTime" name="userTime" class="form-control" />
+                    <input asp-for="Problem.Timing" type="text" class="form-control" />
                     <label asp-for="Problem.Timing"></label>
                     <span asp-validation-for="Problem.Timing" class="text-danger"></span>
                 </div>
@@ -56,7 +56,7 @@
     </form>
 </div>
 
-@section Scripts
+@* @section Scripts
 {
     <script>
         flatpickr("#userTime", {
@@ -66,4 +66,4 @@
             time_24hr: true
         });
     </script>
-}
+} *@

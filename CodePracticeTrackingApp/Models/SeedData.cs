@@ -5,17 +5,13 @@ namespace CodePracticeTrackingApp.Models
 {
     public static class SeedData
     {
-        private static TimeSpan GenerateRandomTimeSpan()
+        private static double GenerateRandomTime()
         {
             // Initialize the Random class
             Random random = new Random();
 
             // Generate a random number of minutes within the range [0, 60)
-            int randomMinutes = random.Next(0, 60);
-
-            // Create a TimeSpan using the random number of minutes
-            TimeSpan randomTimeSpan = TimeSpan.FromMinutes(randomMinutes);
-            return randomTimeSpan;
+            return random.Next(0, 60);
         }
         public static void Initialize(IServiceProvider serviceProvider)
         {
@@ -35,7 +31,7 @@ namespace CodePracticeTrackingApp.Models
                         Difficulty = "Easy",
                         Frequency = 1,
                         Tag = "Tree",
-                        Timing = GenerateRandomTimeSpan(),
+                        Timing = GenerateRandomTime(),
                         LastUpdate = DateTime.Now,
                     },
                     new Problem
@@ -44,7 +40,7 @@ namespace CodePracticeTrackingApp.Models
                         Difficulty = "Easy",
                         Frequency = 2,
                         Tag = "Hash Map",
-                        Timing = GenerateRandomTimeSpan(),
+                        Timing = GenerateRandomTime(),
                         LastUpdate = DateTime.Now,
                     },
                     new Problem
@@ -53,7 +49,7 @@ namespace CodePracticeTrackingApp.Models
                         Difficulty = "Medium",
                         Frequency = 1,
                         Tag = "Dynamic Programming",
-                        Timing = GenerateRandomTimeSpan(),
+                        Timing = GenerateRandomTime(),
                         LastUpdate = DateTime.Now,
                     },
                      new Problem
@@ -62,7 +58,7 @@ namespace CodePracticeTrackingApp.Models
                          Difficulty = "Hard",
                          Frequency = 1,
                          Tag = "Topological Sort",
-                         Timing = GenerateRandomTimeSpan(),
+                         Timing = GenerateRandomTime(),
                          LastUpdate = DateTime.Now,
                      },
                     new Problem
@@ -71,7 +67,7 @@ namespace CodePracticeTrackingApp.Models
                         Difficulty = "Medium",
                         Frequency = 3,
                         Tag = "Disjoint Set",
-                        Timing = GenerateRandomTimeSpan(),
+                        Timing = GenerateRandomTime(),
                         LastUpdate = DateTime.Now,
                     }
                 );;

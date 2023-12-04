@@ -43,8 +43,8 @@ namespace CodePracticeTrackingApp.Migrations
                     b.Property<string>("Tag")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan?>("Timing")
-                        .HasColumnType("time");
+                    b.Property<double>("Timing")
+                        .HasColumnType("float");
 
                     b.Property<string>("Title")
                         .IsRequired()

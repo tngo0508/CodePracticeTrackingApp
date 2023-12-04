@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CodePracticeTrackingApp.Migrations
 {
     /// <inheritdoc />
-    public partial class initDb : Migration
+    public partial class initdb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,7 +22,7 @@ namespace CodePracticeTrackingApp.Migrations
                     Frequency = table.Column<int>(type: "int", nullable: false),
                     Difficulty = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Timing = table.Column<TimeSpan>(type: "time", nullable: true)
+                    Timing = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
