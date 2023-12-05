@@ -5,7 +5,9 @@
 function createCharts(json) {
     createFrequencyChart(json);
     createDifficultyDistributionChart(json);
-    createtimingChart(json);
+    createTimingChart(json);
+    createBubbleChart(json);
+    createTimeSeriesChart(json);
 }
 
 function loadProblemTable() {

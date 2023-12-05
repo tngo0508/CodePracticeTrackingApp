@@ -1,4 +1,6 @@
-﻿let dataChart;
+﻿let frequencyChart;
+let timeSeriesChart;
+let timingChart;
 let data;
 let currentChartType;
 const ctx = document.getElementById('frequencyChart');
@@ -12,7 +14,7 @@ function createFrequencyChart(responseJson) {
     let frequencies = responseJson.data.map(problem => problem.frequency);
 
     // create frequency chart
-    dataChart = new Chart(ctx, {
+    frequencyChart = new Chart(ctx, {
         type: currentChartType,
         data: {
             labels: responseJson.data.map(problem => problem.title),
@@ -36,9 +38,9 @@ function createFrequencyChart(responseJson) {
                 },
                 zoom: {
                     zoom: {
-                        wheel: {
-                            enabled: true,
-                        },
+                        //wheel: {
+                        //    enabled: true,
+                        //},
                         pinch: {
                             enabled: true
                         },
@@ -107,12 +109,12 @@ function createDifficultyDistributionChart(responseJson) {
     });
 }
 
-function createtimingChart(responseJson) {
-    let titles = data.data.map(item => item.title);
-    let timings = data.data.map(item => item.timing);
+function createTimingChart(responseJson) {
+    let titles = responseJson.data.map(item => item.title);
+    let timings = responseJson.data.map(item => item.timing);
 
     let timingCtx = document.getElementById('timingChart').getContext('2d');
-    let timingChart = new Chart(timingCtx, {
+    timingChart = new Chart(timingCtx, {
         type: 'line',
         data: {
             labels: titles,
@@ -144,14 +146,169 @@ function createtimingChart(responseJson) {
                 },
                 legend: {
                     display: true,
-                    position: 'bottom'
+                    position: 'top'
+                },
+                zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'xy'
+                    },
+                    zoom: {
+                        pinch: {
+                            enabled: true
+                        },
+                        drag: {
+                            enabled: true,
+                            mode: 'xy'
+                        }
+                    }
                 }
             }
         }
     });
 }
+
+function createBubbleChart(responsJson) {
+    let titles = responsJson.data.map(item => item.title);
+    let frequencies = responsJson.data.map(item => item.frequency);
+    let timings = responsJson.data.map(item => item.timing);
+
+    let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
+    let bubbleChart = new Chart(bubbleCtx, {
+        type: 'bubble',
+        data: {
+            labels: titles,
+            datasets: [{
+                label: 'Frequency vs. Timing',
+                data: data.data.map(item => ({
+                    x: item.frequency,
+                    y: item.timing,
+                    r: 10 // Bubble radius
+                })),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Frequency'
+                    },
+                    beginAtZero: true
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Timing (minutes)'
+                    },
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Bubble Chart for Frequency vs. Timing'
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
+}
+
+function createTimeSeriesChart(responsJson) {
+    let ctx = document.getElementById('timeSeriesChart').getContext('2d');
+
+    // Extract labels (problem titles) and lastUpdate dates from the data
+    let labels = data.data.map(item => item.title);
+    //let lastUpdateDates = data.data.map(item => moment(item.lastUpdate));
+    let lastUpdateDates = data.data.map(item => new Date(item.lastUpdate.replace(' ', 'T')));
+
+    //console.log(lastUpdateDates)
+
+    timeSeriesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Last Update Time',
+                data: lastUpdateDates,
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Problem'
+                    },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Last Update Date'
+                    },
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        //tooltipFormat: 'll',
+                        displayFormats: {
+                            day: 'MMM d'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Time Series Line Chart for Last Update'
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                zoom: {
+                    zoom: {
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'xy',
+                        drag: {
+                            enabled: true,
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+}
 function resetZoom() {
-    dataChart.resetZoom();
+    frequencyChart.resetZoom();
+}
+
+function resetZoomOnTimingChart() {
+    timingChart.resetZoom();
+}
+
+function resetZoomTimeSeries() {
+    timeSeriesChart.resetZoom();
 }
 
 function toggleChartType() {
@@ -160,10 +317,10 @@ function toggleChartType() {
     $('#toggleChart').text(currentChartType);
 
     // Destroy the existing chart
-    dataChart.destroy();
+    frequencyChart.destroy();
 
     // Create a new chart with the updated chart type
-    dataChart = new Chart(ctx, {
+    frequencyChart = new Chart(ctx, {
         type: currentChartType,
         data: {
             labels: data.data.map(problem => problem.title),
