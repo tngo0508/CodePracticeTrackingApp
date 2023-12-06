@@ -304,7 +304,7 @@ function createRadarChart(responsJson) {
     // Grouping data by tags and summing up frequencies
     const groupedData = {};
     responsJson.data.forEach(item => {
-        const tag = item.tag;
+        const tag = item.tag.toUpperCase();
         if (!groupedData[tag]) {
             groupedData[tag] = 0;
         }

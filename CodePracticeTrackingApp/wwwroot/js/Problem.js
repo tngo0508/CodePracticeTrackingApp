@@ -46,7 +46,7 @@ function loadProblemTable() {
                         //    ? '<progress value="' + data + '" max="${maxFrequency}"></progress>'
                         //    : data;
                         //return `<progress class="progress-bar" role="progressbar" value="${data}" max="${maxFrequency}"></progress>`
-                        return type == 'display' ? `<div class="progress">
+                        return type == 'display' ? `<div class="progress" title="${data}">
                                   <div class="progress-bar bg-info" role="progressbar" style="width: ${parseFloat(data) / parseFloat(maxFrequency) * 100}%;" aria-valuenow="${data}" aria-valuemin="0" aria-valuemax="${maxFrequency}"></div>
                                 </div>`: data;
                     }
@@ -57,10 +57,10 @@ function loadProblemTable() {
                     data: 'id',
                     render: function (data, type) {
                         return `<div class="w-75 btn-group" role="group">
-                        <a href="/problem/upsert?id=${data}" class="btn btn-primary mx-2">
+                        <a href="/problem/upsert?id=${data}" class="btn btn-primary mx-2" title="edit">
                             <i class="bi bi-pencil-square"></i>
                         </a>
-                        <a href="/problem/delete/${data}" class="btn btn-danger mx-2">
+                        <a href="/problem/delete/${data}" class="btn btn-danger mx-2" title="delete">
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </div>`

@@ -114,7 +114,7 @@ namespace CodePracticeTrackingApp.Models
                         Title = "Max Number of K-Sum Pairs",
                         Difficulty = "Medium",
                         Frequency = GenerateRandomFrequency(),
-                        Tag = "tag",
+                        Tag = "Two Pointers",
                         Timing = GenerateRandomTime(),
                         LastUpdate = GenerateRandomDateTime(),
                     },
