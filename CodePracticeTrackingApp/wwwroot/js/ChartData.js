@@ -299,6 +299,51 @@ function createTimeSeriesChart(responsJson) {
     });
 
 }
+
+function createRadarChart(responsJson) {
+    // Grouping data by tags and summing up frequencies
+    const groupedData = {};
+    responsJson.data.forEach(item => {
+        const tag = item.tag;
+        if (!groupedData[tag]) {
+            groupedData[tag] = 0;
+        }
+        groupedData[tag] += item.frequency;
+    });
+
+    // Extracting tags and frequencies from grouped data
+    const tags = Object.keys(groupedData);
+    const frequencies = Object.values(groupedData);
+
+    // Creating the radar chart
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: tags,
+            datasets: [{
+                label: 'Frequency',
+                data: frequencies,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            scale: {
+                angleLines: {
+                    display: false
+                },
+                ticks: {
+                    suggestedMin: 0,
+                    suggestedMax: responsJson.maxFrequency,
+                    stepSize: 1
+                }
+            }
+        }
+    });
+}
+
 function resetZoom() {
     frequencyChart.resetZoom();
 }

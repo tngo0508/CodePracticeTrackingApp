@@ -8,6 +8,7 @@ function createCharts(json) {
     createTimingChart(json);
     createBubbleChart(json);
     createTimeSeriesChart(json);
+    createRadarChart(json);
 }
 
 function loadProblemTable() {
