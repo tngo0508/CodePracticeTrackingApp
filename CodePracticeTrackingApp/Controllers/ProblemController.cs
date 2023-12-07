@@ -11,13 +11,24 @@ namespace CodePracticeTrackingApp.Controllers
     public class ProblemController : Controller
     {
         private readonly DatabaseContext _databaseContext;
+        public SessionVM sessionVm { get; set; }
         public ProblemController(DatabaseContext context)
         {
             _databaseContext = context;
+            sessionVm = new SessionVM();
+        }
+
+        public void SetSessionVm(DatabaseContext context)
+        {
+            var problemRecords = _databaseContext.Problems.ToList();
+            sessionVm.Problems = problemRecords;
+            sessionVm.hasData = problemRecords.Any();
         }
         public IActionResult Index()
         {
-            return View();
+            var allRecords = _databaseContext.Problems.ToList();
+            SetSessionVm(_databaseContext);
+            return View(sessionVm);
         }
         [HttpGet]
         public IActionResult ProblemList()
@@ -44,6 +55,63 @@ namespace CodePracticeTrackingApp.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult CreateRandomData()
+        {
+            if (!_databaseContext.Problems.Any())
+            {
+                _databaseContext.Problems.AddRange(
+                    new Problem
+                    {
+                        Title = "Subtree of another subtree",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Tree",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                    },
+                    new Problem
+                    {
+                        Title = "Two Sum",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Hash Map",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                    },
+                    new Problem
+                    {
+                        Title = "Maximum Subarray Sum",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Dynamic Programming",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                    },
+                    new Problem
+                    {
+                        Title = "Alien Dictionary",
+                        Difficulty = "Hard",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Topological Sort",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                    },
+                    new Problem
+                    {
+                        Title = "Number of Provinces",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Disjoint Set",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                    }
+                );
+            }
+            _databaseContext.SaveChanges();
+            SetSessionVm(_databaseContext);
+            return View(nameof(Index), sessionVm);
+        }
 
 
         [HttpPost]
@@ -58,13 +126,17 @@ namespace CodePracticeTrackingApp.Controllers
                     {
                         // new problem is added
                         _databaseContext.Add(problemVm.Problem);
+                        TempData["success"] = "Problem is added successfully";
                     }
                     else
                     {
                         _databaseContext.Update(problemVm.Problem);
+                        TempData["success"] = "Problem is updated successfully";
                     }
                     _databaseContext.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    SetSessionVm(_databaseContext);
+
+                    return RedirectToAction(nameof(Index), sessionVm);
                 }
             }
             catch (DataException)
@@ -72,6 +144,25 @@ namespace CodePracticeTrackingApp.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(nameof(Upsert), problemVm);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteAll()
+        {
+            // Retrieve all records from the table
+            var allRecords = _databaseContext.Problems.ToList();
+
+            // Remove all records from the DbSet
+            _databaseContext.Problems.RemoveRange(allRecords);
+
+            // Save changes to the database
+            _databaseContext.SaveChanges();
+            var sessionVm = new SessionVM
+            {
+                Problems = null,
+                hasData = false
+            };
+            return RedirectToAction(nameof(Index), sessionVm);
         }
 
         public IActionResult Upsert(int? id)
@@ -102,7 +193,7 @@ namespace CodePracticeTrackingApp.Controllers
             }
             return View(problemFromDb);
         }
-        [HttpPost, ActionName("Delete")]
+        [HttpDelete, ActionName("Delete")]
         public IActionResult DeleteProblem(int? id)
         {
             try
@@ -110,17 +201,20 @@ namespace CodePracticeTrackingApp.Controllers
                 var problem = _databaseContext.Problems.Find(id);
                 if (problem == null)
                 {
-                    return NotFound();
+                    //return NotFound();
+                    return Json(new { success = false, message = "Error while deleting" });
                 }
                 _databaseContext.Problems.Remove(problem);
                 _databaseContext.SaveChanges();
+                SetSessionVm(_databaseContext);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString(), ex);
             }
 
-            return RedirectToAction(nameof(Index));
+            //return RedirectToAction(nameof(Index), sessionVm);
+            return Json(new { success = true, message = "Delete Successful" });
         }
     }
 }

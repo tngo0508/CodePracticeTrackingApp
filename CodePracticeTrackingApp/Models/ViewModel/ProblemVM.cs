@@ -13,5 +13,6 @@ namespace CodePracticeTrackingApp.Models.ViewModel
             new() { Value = "Medium", Text = "Medium" },
             new() { Value = "Hard", Text = "Hard" }
         };
+
     }
 }

@@ -1,8 +1,28 @@
-﻿<div class="container">
+﻿@model SessionVM
+
+
+<div class="container">
     <h1>Problem List</h1>
-    <a asp-controller="Problem" asp-action="Upsert" class="btn btn-primary float-end my-3">
-        Add
+    @if (Model.hasData)
+    {
+        <a asp-controller="Problem" asp-action="DeleteAll" class="btn btn-primary btn-danger float-end my-3">
+            <i class="bi bi-trash3-fill"></i> Delele All
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Problem" asp-action="CreateRandomData" class="btn btn-primary float-end my-3">
+            <i class="bi bi-database-add"></i> Seed
+        </a>
+    }
+    <a asp-controller="Problem" asp-action="Upsert" class="btn btn-primary float-end m-3">
+        <i class="bi bi-plus-square"></i> Add
     </a>
+
+    <a class="btn btn-outline-primary float-end mt-3">
+        <i class="bi bi-cloud-download"></i> Export
+    </a>
+
     <table id="problem" class="table table-striped" style="width:100%">
         <thead>
             <tr>
@@ -16,26 +36,49 @@
             </tr>
         </thead>
     </table>
-    <h1 class="my-3">Data Analysis</h1>
+</div>
+
+<h1 class="my-3">Statistic Analysis</h1>
+@if (Model.hasData)
+{
     <div class="row">
-        <div class="col-8">
-            <button class="btn btn-primary float-end mx-3" id="toggleChart" onclick="toggleChartType()">Bar</button>
-            <button class="btn btn-primary float-end" onclick="resetZoom()">Reset Zoom</button>
-            <canvas id="frequencyChart"></canvas>
+        <div class="col-sm-6 col-md-7">
+            <canvas id="radarChart"></canvas>
         </div>
-        <div class="col-4">
+        <div class="col-sm-6 col-md-5">
             <canvas id="difficultyChart"></canvas>
         </div>
     </div>
-    <div class="row">
-        <div class="col-8">
+    @*     <div class="row mt-3">
+        <div class="col-md-6">
+            <button class="btn btn-primary btn-sm float-end" onclick="resetZoomOnTimingChart()">Reset Zoom</button>
             <canvas id="timingChart"></canvas>
         </div>
-        @* <div class="col-4">
-            <canvas id="difficultyChart"></canvas>
-        </div> *@
+        <div class="col-md-6">
+            <button class="btn btn-primary btn-sm float-end" onclick="resetZoom()">Reset Zoom</button>
+            <button class="btn btn-primary btn-sm float-end mx-3" id="toggleChart" onclick="toggleChartType()">Bar</button>
+            <canvas id="frequencyChart"></canvas>
+        </div>
+    </div> *@
+    <div class="row mt-3">
+        <div class="col">
+            <button class="btn btn-primary btn-sm float-end" onclick="resetZoomOnTimingChart()">Reset Zoom</button>
+            <button class="btn btn-primary btn-sm float-end mx-3" id="toggleTimingChart" onclick="toggleTimingChartType()">Bar</button>
+            <canvas id="timingChart"></canvas>
+        </div>
     </div>
-</div>
+    <div class="row mt-3">
+        <div class="col">
+            <button class="btn btn-primary btn-sm float-end" onclick="resetZoom()">Reset Zoom</button>
+            <button class="btn btn-primary btn-sm float-end mx-3" id="toggleFrequencyChart" onclick="toggleFrequencyChartType()">Bar</button>
+            <canvas id="frequencyChart"></canvas>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <canvas id="bubbleChart"></canvas>
+    </div>
+}
+
 
 @section Scripts
 {

@@ -5,18 +5,35 @@ namespace CodePracticeTrackingApp.Models
 {
     public static class SeedData
     {
-        private static int GenerateRandomFrequency()
+        public static int GenerateRandomFrequency()
         {
             var random = new Random();
             return random.Next(0, 10);
         }
-        private static double GenerateRandomTime()
+        public static double GenerateRandomTime()
         {
             // Initialize the Random class
             Random random = new Random();
 
             // Generate a random number of minutes within the range [0, 60)
             return random.Next(0, 60);
+        }
+        public static DateTime GenerateRandomDateTime()
+        {
+            // Create a random number generator
+            Random random = new Random();
+
+            // Generate random values for year, month, day, hour, minute, second, and millisecond
+            int year = random.Next(2019, 2023); // Change the range as needed
+            int month = random.Next(1, 13);
+            int day = random.Next(1, DateTime.DaysInMonth(year, month) + 1);
+            int hour = random.Next(0, 24);
+            int minute = random.Next(0, 60);
+            int second = random.Next(0, 60);
+            int millisecond = random.Next(0, 1000);
+
+            // Create a DateTime object with the random values
+            return new DateTime(year, month, day, hour, minute, second, millisecond);
         }
         public static void Initialize(IServiceProvider serviceProvider)
         {
@@ -36,7 +53,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Tree",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -45,7 +62,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Hash Map",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -54,7 +71,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Dynamic Programming",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                      new Problem
                      {
@@ -63,7 +80,7 @@ namespace CodePracticeTrackingApp.Models
                          Frequency = GenerateRandomFrequency(),
                          Tag = "Topological Sort",
                          Timing = GenerateRandomTime(),
-                         LastUpdate = DateTime.Now,
+                         LastUpdate = GenerateRandomDateTime(),
                      },
                     new Problem
                     {
@@ -72,7 +89,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Disjoint Set",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -81,25 +98,25 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Two Pointers",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
                         Title = "Move Zeroes",
-                        Difficulty = "EAsy",
+                        Difficulty = "Easy",
                         Frequency = GenerateRandomFrequency(),
-                        Tag = "Two Pointer",
+                        Tag = "Two Pointers",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
                         Title = "Max Number of K-Sum Pairs",
                         Difficulty = "Medium",
                         Frequency = GenerateRandomFrequency(),
-                        Tag = "tag",
+                        Tag = "Two Pointers",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -108,7 +125,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Sliding Window",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -117,7 +134,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Sliding Window",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -126,7 +143,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Prefix Sum",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -135,7 +152,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Hash map",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -144,7 +161,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Stack",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -153,16 +170,16 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Stack",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
                         Title = "Removing Stars From a String",
-                        Difficulty = "diff",
+                        Difficulty = "Hard",
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Stack",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -171,7 +188,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Queue",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -180,7 +197,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Queue",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -189,7 +206,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Linked List",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -198,7 +215,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "DFS",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -207,7 +224,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "DFS",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -216,7 +233,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "BFS",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -225,7 +242,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Delete Node in a BST",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -234,7 +251,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Bit Manipulation",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -243,7 +260,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Trie",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -252,7 +269,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "DP",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -261,7 +278,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Backtracking",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -270,7 +287,7 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "Binary Search",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     },
                     new Problem
                     {
@@ -279,9 +296,9 @@ namespace CodePracticeTrackingApp.Models
                         Frequency = GenerateRandomFrequency(),
                         Tag = "BFS",
                         Timing = GenerateRandomTime(),
-                        LastUpdate = DateTime.Now,
+                        LastUpdate = GenerateRandomDateTime(),
                     }
-                );;
+                );
                 context.SaveChanges();
             }
         }
