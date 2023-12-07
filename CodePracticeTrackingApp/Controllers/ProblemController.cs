@@ -314,6 +314,20 @@ namespace CodePracticeTrackingApp.Controllers
                     chart.Title.Text = "Frequency Bar Chart";
                     chart.Series.Add(dataWorksheet.Cells["C2:C" + (problems.Count + 1)], dataWorksheet.Cells["A2:A" + (problems.Count + 1)]);
 
+                    // Add a new worksheet for the chart based on Timing
+                    var timingChartWorksheet = package.Workbook.Worksheets.Add("TimingChart");
+
+                    // Create a bar chart based on Timing in the chart worksheet
+                    var timingChart = timingChartWorksheet.Drawings.AddChart("TimingBarChart", eChartType.BarClustered);
+                    timingChart.SetPosition(0, 7, 0, 0);
+
+                    // Calculate the height based on the number of data points
+                    chartHeight = Math.Max(400, problems.Count * 20); // Adjust 20 based on your preference
+                    timingChart.SetSize(600, chartHeight);
+
+                    timingChart.Title.Text = "Timing Bar Chart";
+                    timingChart.Series.Add(dataWorksheet.Cells["F2:F" + (problems.Count + 1)], dataWorksheet.Cells["A2:A" + (problems.Count + 1)]);
+
                     // Set content type and file name
                     var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     var fileName = $"CodeTrack_Export_{DateTime.Now.ToString("yyyy-MM-dd-HHmmss")}.xlsx";
