@@ -8,7 +8,7 @@ namespace CodePracticeTrackingApp.Models
         public static int GenerateRandomFrequency()
         {
             var random = new Random();
-            return random.Next(0, 10);
+            return random.Next(1, 10);
         }
         public static double GenerateRandomTime()
         {
@@ -16,7 +16,7 @@ namespace CodePracticeTrackingApp.Models
             Random random = new Random();
 
             // Generate a random number of minutes within the range [0, 60)
-            return random.Next(0, 60);
+            return random.Next(15, 60);
         }
         public static DateTime GenerateRandomDateTime()
         {

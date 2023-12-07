@@ -2,8 +2,13 @@
 using CodePracticeTrackingApp.Models;
 using CodePracticeTrackingApp.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using OfficeOpenXml.Drawing.Chart;
+using OfficeOpenXml.Style;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Net;
 
 namespace CodePracticeTrackingApp.Controllers
@@ -16,6 +21,8 @@ namespace CodePracticeTrackingApp.Controllers
         {
             _databaseContext = context;
             sessionVm = new SessionVM();
+            // Set the LicenseContext before using any EPPlus functionality
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial; // or LicenseContext.Commercial
         }
 
         public void SetSessionVm(DatabaseContext context)
@@ -26,7 +33,6 @@ namespace CodePracticeTrackingApp.Controllers
         }
         public IActionResult Index()
         {
-            var allRecords = _databaseContext.Problems.ToList();
             SetSessionVm(_databaseContext);
             return View(sessionVm);
         }
@@ -215,6 +221,141 @@ namespace CodePracticeTrackingApp.Controllers
 
             //return RedirectToAction(nameof(Index), sessionVm);
             return Json(new { success = true, message = "Delete Successful" });
+        }
+        private void ApplyRowColor(ExcelWorksheet worksheet, int row, string difficulty)
+        {
+            var color = System.Drawing.Color.White; // Default color
+
+            switch (difficulty.ToLower())
+            {
+                case "easy":
+                    color = System.Drawing.Color.LightGreen;
+                    break;
+                case "medium":
+                    color = System.Drawing.Color.LightYellow;
+                    break;
+                case "hard":
+                    color = System.Drawing.Color.LightPink;
+                    break;
+                    // Add more cases as needed
+            }
+
+            for (var i = 1; i <= worksheet.Dimension.End.Column; i++)
+            {
+                worksheet.Cells[row, i].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                worksheet.Cells[row, i].Style.Fill.BackgroundColor.SetColor(color);
+            }
+        }
+        public ActionResult ExportToExcel()
+        {
+            var problems = _databaseContext.Problems.ToList();
+            if (problems != null)
+            {
+                // Create Excel package
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Problems");
+
+                    // Add headers
+                    var headers = new List<string> { "Title", "Tag", "Frequency", "Difficulty", "Last Update", "Timing" };
+                    for (var i = 0; i < headers.Count; i++)
+                    {
+                        var cell = worksheet.Cells[1, i + 1];
+                        cell.Value = headers[i];
+                        cell.Style.Font.Bold = true;
+                        cell.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    }
+
+                    // Populate Excel sheet with data
+                    for (var i = 0; i < problems.Count; i++)
+                    {
+                        var problem = problems[i];
+                        worksheet.Cells[i + 2, 1].Value = problem.Title;
+                        worksheet.Cells[i + 2, 2].Value = problem.Tag;
+                        worksheet.Cells[i + 2, 3].Value = problem.Frequency;
+                        worksheet.Cells[i + 2, 4].Value = problem.Difficulty;
+                        worksheet.Cells[i + 2, 5].Value = problem.LastUpdate.ToString("yyyy-MM-dd");
+                        worksheet.Cells[i + 2, 6].Value = problem.Timing;
+
+                        // Apply row color based on difficulty
+                        ApplyRowColor(worksheet, i + 2, problem.Difficulty);
+                    }
+
+                    // Enable sorting for the entire worksheet
+                    worksheet.Cells["A1:F1"].AutoFilter = true;
+
+                    // Auto-expand columns
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                    // Create a bar chart based on frequency
+                    var chart = worksheet.Drawings.AddChart("FrequencyBarChart", eChartType.BarClustered);
+                    chart.SetPosition(0, 7, 0, 0);
+                    chart.SetSize(600, 400);
+                    chart.Title.Text = "Frequency Bar Chart";
+                    chart.Series.Add(worksheet.Cells["C2:C" + (problems.Count + 1)], worksheet.Cells["A2:A" + (problems.Count + 1)]);
+
+                    // Set content type and file name
+                    var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    var fileName = $"CodeTrack_Export_{DateTime.Now.ToString("yyyy-MM-dd-HHmmss")}.xlsx";
+
+                    // Convert Excel package to byte array
+                    byte[] fileContents = package.GetAsByteArray();
+
+                    // Return Excel file as response
+                    return File(fileContents, contentType, fileName);
+                }
+            }
+            return Json(new { error = true, message = "Cannot Export" });
+        }
+
+        [HttpPost]
+        public IActionResult ImportFromExcel(IFormFile file)
+        {
+            try
+            {
+                // Clear existing records
+                _databaseContext.Problems.RemoveRange(_databaseContext.Problems);
+                _databaseContext.SaveChanges();
+
+                if (file != null && file.Length > 0)
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        file.CopyTo(stream);
+                        using (var package = new ExcelPackage(stream))
+                        {
+                            var worksheet = package.Workbook.Worksheets[0]; // Assuming data is in the first sheet
+
+                            for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                            {
+                                // Assuming your model has properties like Title, Tag, Frequency, Difficulty, LastUpdate, Timing
+                                var problem = new Problem
+                                {
+                                    Title = worksheet.Cells[row, 1].Value?.ToString(),
+                                    Tag = worksheet.Cells[row, 2].Value?.ToString(),
+                                    Frequency = int.Parse(worksheet.Cells[row, 3].Value?.ToString()),
+                                    Difficulty = worksheet.Cells[row, 4].Value?.ToString(),
+                                    LastUpdate = DateTime.Parse(worksheet.Cells[row, 5].Value?.ToString()),
+                                    Timing = double.Parse(worksheet.Cells[row, 6].Value?.ToString())
+                                };
+
+                                _databaseContext.Problems.Add(problem);
+                            }
+
+                            _databaseContext.SaveChanges();
+                        }
+                    }
+                }
+
+                TempData["success"] = "Import successful";
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Error during import: {ex.Message}";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
