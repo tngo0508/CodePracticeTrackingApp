@@ -254,46 +254,65 @@ namespace CodePracticeTrackingApp.Controllers
                 // Create Excel package
                 using (var package = new ExcelPackage())
                 {
-                    var worksheet = package.Workbook.Worksheets.Add("Problems");
+                    // Add a worksheet for the data
+                    var dataWorksheet = package.Workbook.Worksheets.Add("ProblemsData");
 
                     // Add headers
                     var headers = new List<string> { "Title", "Tag", "Frequency", "Difficulty", "Last Update", "Timing" };
                     for (var i = 0; i < headers.Count; i++)
                     {
-                        var cell = worksheet.Cells[1, i + 1];
+                        var cell = dataWorksheet.Cells[1, i + 1];
                         cell.Value = headers[i];
                         cell.Style.Font.Bold = true;
                         cell.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
                     }
 
-                    // Populate Excel sheet with data
+                    // Populate data worksheet with data
                     for (var i = 0; i < problems.Count; i++)
                     {
                         var problem = problems[i];
-                        worksheet.Cells[i + 2, 1].Value = problem.Title;
-                        worksheet.Cells[i + 2, 2].Value = problem.Tag;
-                        worksheet.Cells[i + 2, 3].Value = problem.Frequency;
-                        worksheet.Cells[i + 2, 4].Value = problem.Difficulty;
-                        worksheet.Cells[i + 2, 5].Value = problem.LastUpdate.ToString("yyyy-MM-dd");
-                        worksheet.Cells[i + 2, 6].Value = problem.Timing;
+                        dataWorksheet.Cells[i + 2, 1].Value = problem.Title;
+                        dataWorksheet.Cells[i + 2, 2].Value = problem.Tag;
+                        dataWorksheet.Cells[i + 2, 3].Value = problem.Frequency;
+                        dataWorksheet.Cells[i + 2, 4].Value = problem.Difficulty;
+                        dataWorksheet.Cells[i + 2, 5].Value = problem.LastUpdate.ToString();
+                        dataWorksheet.Cells[i + 2, 6].Value = problem.Timing;
 
                         // Apply row color based on difficulty
-                        ApplyRowColor(worksheet, i + 2, problem.Difficulty);
+                        ApplyRowColor(dataWorksheet, i + 2, problem.Difficulty);
                     }
 
-                    // Enable sorting for the entire worksheet
-                    worksheet.Cells["A1:F1"].AutoFilter = true;
+                    // Apply borders to the entire table
+                    var tableRange = dataWorksheet.Cells[dataWorksheet.Dimension.Address];
+                    var tableBorder = tableRange.Style.Border;
+                    tableBorder.Top.Style = ExcelBorderStyle.Thin;
+                    tableBorder.Bottom.Style = ExcelBorderStyle.Thin;
+                    tableBorder.Left.Style = ExcelBorderStyle.Thin;
+                    tableBorder.Right.Style = ExcelBorderStyle.Thin;
 
-                    // Auto-expand columns
-                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                    // Format "Last Update" column as DateTime
+                    dataWorksheet.Column(5).Style.Numberformat.Format = "yyyy-MM-dd hh:mm:ss";
 
-                    // Create a bar chart based on frequency
-                    var chart = worksheet.Drawings.AddChart("FrequencyBarChart", eChartType.BarClustered);
+                    // Enable sorting for the data worksheet
+                    dataWorksheet.Cells["A1:F1"].AutoFilter = true;
+
+                    // Auto-expand columns for the data worksheet
+                    dataWorksheet.Cells[dataWorksheet.Dimension.Address].AutoFitColumns();
+
+                    // Add a new worksheet for the chart
+                    var chartWorksheet = package.Workbook.Worksheets.Add("FrequencyChart");
+
+                    // Create a bar chart based on frequency in the chart worksheet
+                    var chart = chartWorksheet.Drawings.AddChart("FrequencyBarChart", eChartType.BarClustered);
                     chart.SetPosition(0, 7, 0, 0);
-                    chart.SetSize(600, 400);
+
+                    // Calculate the height based on the number of data points
+                    var chartHeight = Math.Max(400, problems.Count * 20); // Adjust 20 based on your preference
+                    chart.SetSize(600, chartHeight);
+
                     chart.Title.Text = "Frequency Bar Chart";
-                    chart.Series.Add(worksheet.Cells["C2:C" + (problems.Count + 1)], worksheet.Cells["A2:A" + (problems.Count + 1)]);
+                    chart.Series.Add(dataWorksheet.Cells["C2:C" + (problems.Count + 1)], dataWorksheet.Cells["A2:A" + (problems.Count + 1)]);
 
                     // Set content type and file name
                     var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -309,6 +328,21 @@ namespace CodePracticeTrackingApp.Controllers
             return Json(new { error = true, message = "Cannot Export" });
         }
 
+        private string ParseDifficulty(string difficulty)
+        {
+            // Handle 'Easy' or other non-numeric values
+            switch (difficulty?.ToLower())
+            {
+                case "easy":
+                    return "Easy"; // Or assign a numeric representation or handle it differently
+                case "medium":
+                    return "Medium"; // Or assign a numeric representation or handle it differently
+                case "hard":
+                    return "Hard"; // Or assign a numeric representation or handle it differently
+                default:
+                    return "Unknown"; // Or assign a default value or handle it differently
+            }
+        }
         [HttpPost]
         public IActionResult ImportFromExcel(IFormFile file)
         {
@@ -326,27 +360,37 @@ namespace CodePracticeTrackingApp.Controllers
                         using (var package = new ExcelPackage(stream))
                         {
                             var worksheet = package.Workbook.Worksheets[0]; // Assuming data is in the first sheet
+                            var problemList = new List<Problem>();
 
                             for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                             {
-                                // Assuming your model has properties like Title, Tag, Frequency, Difficulty, LastUpdate, Timing
-                                var problem = new Problem
+                                problemList.Add(new Problem
                                 {
-                                    Title = worksheet.Cells[row, 1].Value?.ToString(),
+                                    // Parsing and handling empty string for Title
+                                    Title = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Value?.ToString()) ? string.Empty : worksheet.Cells[row, 1].Value?.ToString(),
                                     Tag = worksheet.Cells[row, 2].Value?.ToString(),
-                                    Frequency = int.Parse(worksheet.Cells[row, 3].Value?.ToString()),
-                                    Difficulty = worksheet.Cells[row, 4].Value?.ToString(),
-                                    LastUpdate = DateTime.Parse(worksheet.Cells[row, 5].Value?.ToString()),
-                                    Timing = double.Parse(worksheet.Cells[row, 6].Value?.ToString())
-                                };
 
-                                _databaseContext.Problems.Add(problem);
-                            }
+                                    // Parsing Frequency with int.TryParse
+                                    Frequency = int.TryParse(worksheet.Cells[row, 3].Value?.ToString(), out var frequency) ? frequency : 0,
 
-                            _databaseContext.SaveChanges();
+                                    // Parsing Difficulty
+                                    Difficulty = ParseDifficulty(worksheet.Cells[row, 4].Value?.ToString()),
+
+                                    // Parsing LastUpdate with DateTime.TryParse
+                                    LastUpdate = DateTime.TryParse(worksheet.Cells[row, 5].Value?.ToString(), out var lastUpdate) ? lastUpdate : DateTime.Now,
+
+                                    // Parsing Timing with double.TryParse
+                                    Timing = double.TryParse(worksheet.Cells[row, 6].Value?.ToString(), out var timing) ? timing : 0.0
+                                });
+                            };
+                            _databaseContext.Problems.AddRange(problemList);
+
                         }
+
+                        _databaseContext.SaveChanges();
                     }
                 }
+
 
                 TempData["success"] = "Import successful";
             }
