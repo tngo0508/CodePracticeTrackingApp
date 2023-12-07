@@ -5,12 +5,12 @@ namespace CodePracticeTrackingApp.Models
 {
     public static class SeedData
     {
-        private static int GenerateRandomFrequency()
+        public static int GenerateRandomFrequency()
         {
             var random = new Random();
             return random.Next(0, 10);
         }
-        private static double GenerateRandomTime()
+        public static double GenerateRandomTime()
         {
             // Initialize the Random class
             Random random = new Random();
@@ -18,7 +18,7 @@ namespace CodePracticeTrackingApp.Models
             // Generate a random number of minutes within the range [0, 60)
             return random.Next(0, 60);
         }
-        private static DateTime GenerateRandomDateTime()
+        public static DateTime GenerateRandomDateTime()
         {
             // Create a random number generator
             Random random = new Random();
@@ -103,9 +103,9 @@ namespace CodePracticeTrackingApp.Models
                     new Problem
                     {
                         Title = "Move Zeroes",
-                        Difficulty = "EAsy",
+                        Difficulty = "Easy",
                         Frequency = GenerateRandomFrequency(),
-                        Tag = "Two Pointer",
+                        Tag = "Two Pointers",
                         Timing = GenerateRandomTime(),
                         LastUpdate = GenerateRandomDateTime(),
                     },
@@ -298,7 +298,7 @@ namespace CodePracticeTrackingApp.Models
                         Timing = GenerateRandomTime(),
                         LastUpdate = GenerateRandomDateTime(),
                     }
-                );;
+                );
                 context.SaveChanges();
             }
         }

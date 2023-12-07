@@ -1,11 +1,17 @@
 ﻿let frequencyChart;
-let timeSeriesChart;
+let timingBarChart;
 let timingChart;
+let radarChart;
+let difficultyChart;
+let bubbleChart;
 let data;
 let currentChartType;
-const ctx = document.getElementById('frequencyChart');
+const freqquencyChartCtx = document.getElementById('frequencyChart');
 
 function createFrequencyChart(responseJson) {
+    if (frequencyChart) {
+        frequencyChart.destroy();
+    }
     console.log(responseJson);
     data = responseJson;
 
@@ -14,7 +20,7 @@ function createFrequencyChart(responseJson) {
     let frequencies = responseJson.data.map(problem => problem.frequency);
 
     // create frequency chart
-    frequencyChart = new Chart(ctx, {
+    frequencyChart = new Chart(freqquencyChartCtx, {
         type: currentChartType,
         data: {
             labels: responseJson.data.map(problem => problem.title),
@@ -61,6 +67,9 @@ function createFrequencyChart(responseJson) {
 }
 
 function createDifficultyDistributionChart(responseJson) {
+    if (difficultyChart) {
+        difficultyChart.destroy();
+    }
     // Extracting data for charts
     let titles = data.data.map(item => item.title);
     let frequencies = data.data.map(item => item.frequency);
@@ -75,7 +84,7 @@ function createDifficultyDistributionChart(responseJson) {
 
     // Pie chart for Difficulty Distribution
     let difficultyCtx = document.getElementById('difficultyChart').getContext('2d');
-    let difficultyChart = new Chart(difficultyCtx, {
+    difficultyChart = new Chart(difficultyCtx, {
         type: 'pie',
         data: {
             labels: ['Easy', 'Medium', 'Hard'],
@@ -110,6 +119,9 @@ function createDifficultyDistributionChart(responseJson) {
 }
 
 function createTimingChart(responseJson) {
+    if (timingChart) {
+        timingChart.destroy();
+    }
     let titles = responseJson.data.map(item => item.title);
     let timings = responseJson.data.map(item => item.timing);
 
@@ -169,12 +181,15 @@ function createTimingChart(responseJson) {
 }
 
 function createBubbleChart(responsJson) {
+    if (bubbleChart) {
+        bubbleChart.destroy();
+    }
     let titles = responsJson.data.map(item => item.title);
     let frequencies = responsJson.data.map(item => item.frequency);
     let timings = responsJson.data.map(item => item.timing);
 
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
-    let bubbleChart = new Chart(bubbleCtx, {
+    bubbleChart = new Chart(bubbleCtx, {
         type: 'bubble',
         data: {
             labels: titles,
@@ -220,87 +235,56 @@ function createBubbleChart(responsJson) {
         }
     });
 }
+// Function to generate random colors
+function getRandomColor() {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+function createTimingBarChart(responsJson) {
+    if (timingBarChart) {
+        timingBarChart.destroy();
+    }
+    // Extracting difficulty levels, frequencies, and timings
+    let difficultyLevels = Array.from(new Set(responsJson.data.map(item => item.difficulty)));
+    let frequencies = responsJson.data.map(item => item.frequency);
+    let timings = responsJson.data.map(item => item.timing);
 
-function createTimeSeriesChart(responsJson) {
-    let ctx = document.getElementById('timeSeriesChart').getContext('2d');
-
-    // Extract labels (problem titles) and lastUpdate dates from the data
-    let labels = data.data.map(item => item.title);
-    //let lastUpdateDates = data.data.map(item => moment(item.lastUpdate));
-    let lastUpdateDates = data.data.map(item => new Date(item.lastUpdate.replace(' ', 'T')));
-
-    //console.log(lastUpdateDates)
-
-    timeSeriesChart = new Chart(ctx, {
-        type: 'line',
+    // Creating a stacked bar chart
+    let ctx = document.getElementById('timingBarChart').getContext('2d');
+    timingBarChart = new Chart(ctx, {
+        type: 'bar',
         data: {
-            labels: labels,
-            datasets: [{
-                label: 'Last Update Time',
-                data: lastUpdateDates,
-                fill: false,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                pointRadius: 5,
-                pointHoverRadius: 7
+            labels: responsJson.data.map(item => item.title),
+            datasets: [
+            {
+                label: 'Timing',
+                data: timings,
+                    borderWidth: 1,
+                    borderColor: 'rgba(255, 99, 132, 0.7)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
             }]
         },
         options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Problem'
-                    },
-                    ticks: {
-                        autoSkip: false,
-                        maxRotation: 45,
-                        minRotation: 45
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Last Update Date'
-                    },
-                    type: 'time',
-                    time: {
-                        unit: 'day',
-                        //tooltipFormat: 'll',
-                        displayFormats: {
-                            day: 'MMM d'
-                        }
-                    }
-                }
+            title: {
+                display: true,
+                fontSize: 16
             },
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Time Series Line Chart for Last Update'
-                },
-                legend: {
-                    display: true,
-                    position: 'top'
-                },
-                zoom: {
-                    zoom: {
-                        pinch: {
-                            enabled: true
-                        },
-                        mode: 'xy',
-                        drag: {
-                            enabled: true,
-                        }
-                    }
-                }
+            legend: {
+                display: true,
+                position: 'bottom'
             }
         }
     });
-
 }
 
 function createRadarChart(responsJson) {
+    if (radarChart) {
+        radarChart.destroy();
+    }
     // Grouping data by tags and summing up frequencies
     const groupedData = {};
     responsJson.data.forEach(item => {
@@ -317,7 +301,7 @@ function createRadarChart(responsJson) {
 
     // Creating the radar chart
     const ctx = document.getElementById('radarChart').getContext('2d');
-    new Chart(ctx, {
+    radarChart = new Chart(ctx, {
         type: 'radar',
         data: {
             labels: tags,
@@ -352,7 +336,7 @@ function resetZoomOnTimingChart() {
     timingChart.resetZoom();
 }
 
-function resetZoomTimeSeries() {
+function resetZoomDonut() {
     timeSeriesChart.resetZoom();
 }
 
@@ -365,7 +349,7 @@ function toggleChartType() {
     frequencyChart.destroy();
 
     // Create a new chart with the updated chart type
-    frequencyChart = new Chart(ctx, {
+    frequencyChart = new Chart(freqquencyChartCtx, {
         type: currentChartType,
         data: {
             labels: data.data.map(problem => problem.title),
