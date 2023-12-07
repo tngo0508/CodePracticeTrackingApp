@@ -5,8 +5,10 @@ let radarChart;
 let difficultyChart;
 let bubbleChart;
 let data;
-let currentChartType;
+let currentFrequencyChartType;
+let currentTimingChartType;
 const freqquencyChartCtx = document.getElementById('frequencyChart');
+const timingChartCtx = document.getElementById('timingChart');
 
 function createFrequencyChart(responseJson) {
     if (frequencyChart) {
@@ -15,13 +17,13 @@ function createFrequencyChart(responseJson) {
     console.log(responseJson);
     data = responseJson;
 
-    currentChartType = 'bar';
+    currentFrequencyChartType = 'bar';
 
     let frequencies = responseJson.data.map(problem => problem.frequency);
 
     // create frequency chart
     frequencyChart = new Chart(freqquencyChartCtx, {
-        type: currentChartType,
+        type: currentFrequencyChartType,
         data: {
             labels: responseJson.data.map(problem => problem.title),
             datasets: [{
@@ -71,9 +73,9 @@ function createDifficultyDistributionChart(responseJson) {
         difficultyChart.destroy();
     }
     // Extracting data for charts
-    let titles = data.data.map(item => item.title);
-    let frequencies = data.data.map(item => item.frequency);
-    let difficulties = data.data.map(item => item.difficulty);
+    let titles = responseJson.data.map(item => item.title);
+    let frequencies = responseJson.data.map(item => item.frequency);
+    let difficulties = responseJson.data.map(item => item.difficulty);
 
     // Group difficulties into three categories: Easy, Medium, Hard
     let groupedDifficulties = difficulties.map(difficulty => {
@@ -125,18 +127,19 @@ function createTimingChart(responseJson) {
     let titles = responseJson.data.map(item => item.title);
     let timings = responseJson.data.map(item => item.timing);
 
-    let timingCtx = document.getElementById('timingChart').getContext('2d');
-    timingChart = new Chart(timingCtx, {
-        type: 'line',
+    currentTimingChartType = 'bar';
+
+    timingChart = new Chart(timingChartCtx, {
+        type: currentTimingChartType,
         data: {
             labels: titles,
             datasets: [{
                 label: 'Timing',
                 data: timings,
                 fill: false,
-                borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
-                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                borderColor: 'rgba(236, 169, 167, 1)',
+                backgroundColor: 'rgba(236, 169, 167, 0.7)',
                 pointRadius: 5,
                 pointHoverRadius: 7
             }]
@@ -244,42 +247,6 @@ function getRandomColor() {
     }
     return color;
 }
-function createTimingBarChart(responsJson) {
-    if (timingBarChart) {
-        timingBarChart.destroy();
-    }
-    // Extracting difficulty levels, frequencies, and timings
-    let difficultyLevels = Array.from(new Set(responsJson.data.map(item => item.difficulty)));
-    let frequencies = responsJson.data.map(item => item.frequency);
-    let timings = responsJson.data.map(item => item.timing);
-
-    // Creating a stacked bar chart
-    let ctx = document.getElementById('timingBarChart').getContext('2d');
-    timingBarChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: responsJson.data.map(item => item.title),
-            datasets: [
-            {
-                label: 'Timing',
-                data: timings,
-                    borderWidth: 1,
-                    borderColor: 'rgba(255, 99, 132, 0.7)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                fontSize: 16
-            },
-            legend: {
-                display: true,
-                position: 'bottom'
-            }
-        }
-    });
-}
 
 function createRadarChart(responsJson) {
     if (radarChart) {
@@ -340,17 +307,17 @@ function resetZoomDonut() {
     timeSeriesChart.resetZoom();
 }
 
-function toggleChartType() {
+function toggleFrequencyChartType() {
     // Toggle between 'bar' and 'line' chart types
-    currentChartType = currentChartType === 'bar' ? 'line' : 'bar';
-    $('#toggleChart').text(currentChartType);
+    currentFrequencyChartType = currentFrequencyChartType === 'bar' ? 'line' : 'bar';
+    $('#toggleFrequencyChart').text(currentFrequencyChartType);
 
     // Destroy the existing chart
     frequencyChart.destroy();
 
     // Create a new chart with the updated chart type
     frequencyChart = new Chart(freqquencyChartCtx, {
-        type: currentChartType,
+        type: currentFrequencyChartType,
         data: {
             labels: data.data.map(problem => problem.title),
             datasets: [{
@@ -364,6 +331,62 @@ function toggleChartType() {
                 y: {
                     beginAtZero: true,
                     max: data.maxFrequency
+                }
+            },
+            plugins: {
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true,
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'xy',
+                        drag: {
+                            enabled: true,
+                            borderColor: 'rgba(225,225,225,0.3)',
+                            borderWidth: 5,
+                            backgroundColor: 'rgb(225,225,225)',
+                            animationDuration: 1000,
+                        },
+                    }
+                }
+            }
+        }
+    });
+}
+
+function toggleTimingChartType() {
+    // Toggle between 'bar' and 'line' chart types
+    currentTimingChartType = currentTimingChartType === 'bar' ? 'line' : 'bar';
+    $('#toggleTimingChart').text(currentTimingChartType);
+
+    // Destroy the existing chart
+    timingChart.destroy();
+
+    let titles = data.data.map(item => item.title);
+    let timings = data.data.map(item => item.timing);
+
+    // Create a new chart with the updated chart type
+    timingChart = new Chart(timingChartCtx, {
+        type: currentTimingChartType,
+        data: {
+            labels: titles,
+            datasets: [{
+                label: 'Timing',
+                data: timings,
+                fill: false,
+                borderWidth: 2,
+                borderColor: 'rgba(236, 169, 167, 1)',
+                backgroundColor: 'rgba(236, 169, 167, 0.7)',
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(timings),
                 }
             },
             plugins: {

@@ -9,7 +9,6 @@ function createCharts(json) {
     createDifficultyDistributionChart(json);
     createTimingChart(json);
     createBubbleChart(json);
-    createTimingBarChart(json);
     createRadarChart(json);
 }
 
@@ -44,11 +43,11 @@ function loadProblemTable() {
                     data: 'difficulty',
                     render: function (data) {
                         if (data.toLowerCase() === 'easy') {
-                            return `<span class="badge bg-success">${data}</span>`
+                            return `<span class="badge rounded-pill bg-success">${data}</span>`
                         } else if (data.toLowerCase() === 'medium') {
-                            return `<span class="badge bg-warning">${data}</span>`
+                            return `<span class="badge rounded-pill bg-warning">${data}</span>`
                         } else {
-                            return `<span class="badge bg-danger">${data}</span>`
+                            return `<span class="badge rounded-pill bg-danger">${data}</span>`
                         }
                     }
                 },
@@ -65,7 +64,12 @@ function loadProblemTable() {
                     }
                 },
                 { data: 'lastUpdate' },
-                { data: 'timing' },
+                {
+                    data: 'timing',
+                    render: function (data, type, row, meta) {
+                        return type == 'display' ? data + ' mins': data;
+                    }
+                },
                 {
                     data: 'id',
                     render: function (data, type) {
