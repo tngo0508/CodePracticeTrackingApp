@@ -459,8 +459,26 @@ namespace CodePracticeTrackingApp.Controllers
 
             // Add Radar chart
             var radarChartWorksheet = package.Workbook.Worksheets.Add("RadarChart");
-            var radarSeriesAddress = dataWorksheet.Cells[2, 3, problems.Count + 1, 3]; // Assuming "Title" is in column 2, and "Frequency" is in column 3
-            var radarCategoryAddress = dataWorksheet.Cells[2, 1, problems.Count + 1, 1]; // Assuming "Title" is in column 1
+
+            // Group problems by Tag and calculate the total frequency for each Tag
+            var groupedProblems = problems.GroupBy(p => p.Tag)
+                                          .Select(g => new { Tag = g.Key, TotalFrequency = g.Sum(p => p.Frequency) })
+                                          .ToList();
+
+            // Assuming "TotalFrequency" is the new column representing the total frequency for each Tag
+            radarChartWorksheet.Cells["B1"].Value = "Tag";
+            radarChartWorksheet.Cells["C1"].Value = "Total Frequency";
+
+            for (int i = 0; i < groupedProblems.Count; i++)
+            {
+                radarChartWorksheet.Cells[i + 2, 2].Value = groupedProblems[i].Tag;
+                radarChartWorksheet.Cells[i + 2, 3].Value = groupedProblems[i].TotalFrequency;
+            }
+
+            // Define the series and category addresses based on the new data
+            var radarSeriesAddress = radarChartWorksheet.Cells[2, 3, groupedProblems.Count + 1, 3]; // Assuming "Total Frequency" is in column 3
+            var radarCategoryAddress = radarChartWorksheet.Cells[2, 2, groupedProblems.Count + 1, 2]; // Assuming "Tag" is in column 2
+
             CreateRadarChart(radarChartWorksheet, "Radar Chart", radarSeriesAddress, radarCategoryAddress);
 
             // Create Difficulty Statistic Table
