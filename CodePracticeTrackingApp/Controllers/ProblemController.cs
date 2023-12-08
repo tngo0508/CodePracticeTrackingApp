@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Style;
+using OfficeOpenXml.Table;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -224,7 +226,7 @@ namespace CodePracticeTrackingApp.Controllers
         }
         private void ApplyRowColor(ExcelWorksheet worksheet, int row, string difficulty)
         {
-            var color = System.Drawing.Color.White; // Default color
+            var color = System.Drawing.Color.White;
 
             switch (difficulty.ToLower())
             {
@@ -237,108 +239,252 @@ namespace CodePracticeTrackingApp.Controllers
                 case "hard":
                     color = System.Drawing.Color.LightPink;
                     break;
-                    // Add more cases as needed
             }
 
             for (var i = 1; i <= worksheet.Dimension.End.Column; i++)
             {
-                worksheet.Cells[row, i].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                worksheet.Cells[row, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells[row, i].Style.Fill.BackgroundColor.SetColor(color);
             }
         }
+
+        private void SetHeaders(ExcelWorksheet worksheet, List<string> headers)
+        {
+            for (var i = 0; i < headers.Count; i++)
+            {
+                var cell = worksheet.Cells[1, i + 1];
+                cell.Value = headers[i];
+                cell.Style.Font.Bold = true;
+                cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+            }
+        }
+
+        private void ApplyTableBorders(ExcelRange tableRange)
+        {
+            var tableBorder = tableRange.Style.Border;
+            tableBorder.Top.Style = ExcelBorderStyle.Thin;
+            tableBorder.Bottom.Style = ExcelBorderStyle.Thin;
+            tableBorder.Left.Style = ExcelBorderStyle.Thin;
+            tableBorder.Right.Style = ExcelBorderStyle.Thin;
+        }
+
+        private void FormatLastUpdateColumn(ExcelColumn column)
+        {
+            column.Style.Numberformat.Format = "yyyy-MM-dd hh:mm:ss";
+        }
+
+        private void EnableSorting(ExcelWorksheet worksheet, string address)
+        {
+            worksheet.Cells[address].AutoFilter = true;
+        }
+
+        private void AutoFitColumns(ExcelWorksheet worksheet)
+        {
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+        }
+
+        private void CreateBarChart(ExcelWorksheet chartWorksheet, string chartTitle, ExcelRangeBase seriesAddress, ExcelRangeBase categoryAddress, System.Drawing.Color barColor, string categoryString)
+        {
+            var chart = chartWorksheet.Drawings.AddChart(chartTitle, eChartType.BarClustered);
+            chart.SetPosition(0, 7, 0, 0);
+
+            // Calculate chart size based on the number of data points
+            int chartHeight = Math.Max(400, seriesAddress.End.Row - seriesAddress.Start.Row + 1) * 2;
+            chart.SetSize(600, chartHeight);
+
+            chart.Title.Text = chartTitle;
+
+            // Set chart style
+            chart.Style = eChartStyle.Style26;
+
+            // Configure series
+            var series = chart.Series.Add(seriesAddress, categoryAddress);
+            series.HeaderAddress = categoryAddress;
+
+            // Configure axis titles
+            chart.YAxis.Title.Text = "Problem";
+            chart.XAxis.Title.Text = categoryString;
+
+            // Format axis labels
+            chart.XAxis.MajorTickMark = eAxisTickMark.None;
+            chart.XAxis.MinorTickMark = eAxisTickMark.None;
+            chart.XAxis.Title.Font.Size = 12;
+
+            chart.YAxis.MajorTickMark = eAxisTickMark.None;
+            chart.YAxis.MinorTickMark = eAxisTickMark.None;
+            chart.YAxis.Title.Font.Size = 12;
+
+            // Remove the legend
+            chart.Legend.Remove();
+
+            // Set bar color
+            series.Fill.Color = barColor;
+        }
+
+        private void CreateRadarChart(ExcelWorksheet chartWorksheet, string chartTitle, ExcelRangeBase seriesAddress, ExcelRangeBase categoryAddress)
+        {
+            var chart = chartWorksheet.Drawings.AddChart(chartTitle, eChartType.Radar);
+            chart.SetPosition(0, 7, 0, 0);
+
+            // Set a fixed size for the radar chart
+            chart.SetSize(600, 400);
+
+            chart.Title.Text = chartTitle;
+
+            // Configure series
+            var series = chart.Series.Add(seriesAddress, categoryAddress);
+            series.HeaderAddress = categoryAddress;
+
+            // Remove the legend
+            chart.Legend.Remove();
+        }
+
+        private void ExportDataToExcel(ExcelPackage package, List<Problem> problems)
+        {
+            var dataWorksheet = package.Workbook.Worksheets.Add("ProblemsData");
+            var headers = new List<string> { "Title", "Tag", "Frequency", "Difficulty", "Last Update", "Timing" };
+            SetHeaders(dataWorksheet, headers);
+
+            for (var i = 0; i < problems.Count; i++)
+            {
+                var problem = problems[i];
+                dataWorksheet.Cells[i + 2, 1].Value = problem.Title;
+                dataWorksheet.Cells[i + 2, 2].Value = problem.Tag;
+                dataWorksheet.Cells[i + 2, 3].Value = problem.Frequency;
+                dataWorksheet.Cells[i + 2, 4].Value = problem.Difficulty;
+                dataWorksheet.Cells[i + 2, 5].Value = problem.LastUpdate.ToString();
+                dataWorksheet.Cells[i + 2, 6].Value = problem.Timing;
+
+                ApplyRowColor(dataWorksheet, i + 2, problem.Difficulty);
+            }
+
+            var tableRange = dataWorksheet.Cells[dataWorksheet.Dimension.Address];
+            ApplyTableBorders(tableRange);
+            FormatLastUpdateColumn(dataWorksheet.Column(5));
+            EnableSorting(dataWorksheet, "A1:F1");
+            AutoFitColumns(dataWorksheet);
+        }
+
+        private void CreatePieChart(ExcelWorksheet chartWorksheet, string chartTitle, ExcelRangeBase seriesAddress, ExcelRangeBase categoryAddress)
+        {
+            // Add a new pie chart to the specified worksheet with the given chartTitle
+            var chart = chartWorksheet.Drawings.AddChart(chartTitle, eChartType.Pie);
+
+            // Set the position of the chart on the worksheet
+            chart.SetPosition(6, 6, 8, 0);
+
+            // Set a fixed size for the pie chart (width: 400, height: 400)
+            chart.SetSize(400, 400);
+
+            // Set the title of the pie chart
+            chart.Title.Text = chartTitle;
+
+            // Add a series to the pie chart manually using the specified seriesAddress
+            var series = chart.Series.Add(seriesAddress.Address, categoryAddress.Address);
+            series.HeaderAddress = categoryAddress;
+
+            // Remove the legend
+            //chart.Legend.Remove();
+        }
+
+
+        private void CreateDiffStatTable(ExcelPackage package, List<Problem> problems)
+        {
+            // Add Difficulty table to the first worksheet in column H
+            var difficultyTableWorksheet = package.Workbook.Worksheets[0]; // Assuming the first worksheet is at index 0
+            var difficultyTableStartCell = difficultyTableWorksheet.Cells["J1"]; // Start from cell H1
+            var difficultyTableHeaders = difficultyTableWorksheet.Cells["J1:J4"]; // Assuming you have Easy, Medium, and Hard difficulties
+
+            // Extract difficulty distribution data from the problems list
+            var difficultyDistribution = problems
+                .GroupBy(p => p.Difficulty)
+                .Select(g => new { Difficulty = g.Key, Count = g.Count() })
+                .ToList();
+
+            // Create a table from the data
+            var difficultyTableRange = difficultyTableWorksheet.Cells[difficultyTableStartCell.Start.Row, difficultyTableStartCell.Start.Column, difficultyTableStartCell.Start.Row + difficultyDistribution.Count, difficultyTableStartCell.Start.Column];
+            var difficultyTable = difficultyTableWorksheet.Tables.Add(difficultyTableRange, "DifficultyTable");
+            difficultyTable.ShowHeader = false;
+            difficultyTable.TableStyle = TableStyles.None;
+
+            // Format the table
+            //difficultyTable.TableStyle = TableStyles.Medium2;
+
+            // Add "Difficulty" column next to the table in column I
+            var difficultyColumnStartCell = difficultyTableWorksheet.Cells["I1"]; // Start from cell I1
+            difficultyColumnStartCell.Value = "Difficulty";
+            for (int i = 0; i < difficultyDistribution.Count; i++)
+            {
+                difficultyColumnStartCell.Offset(i + 1, 0).Value = difficultyDistribution[i].Difficulty;
+            }
+
+            // Add "Count" column next to the table in column J
+            var countColumnStartCell = difficultyTableWorksheet.Cells["J1"]; // Start from cell J1
+            countColumnStartCell.Value = "Count";
+            for (int i = 0; i < difficultyDistribution.Count; i++)
+            {
+                countColumnStartCell.Offset(i + 1, 0).Value = difficultyDistribution[i].Count;
+            }
+
+
+            // Add Pie chart to the first worksheet
+            var pieChartWorksheet = package.Workbook.Worksheets[0]; // Assuming the first worksheet is at index 0
+
+            // Prepare data for the chart based on the difficulty table
+            var pieSeriesAddress = pieChartWorksheet.Cells["J2:J" + (difficultyDistribution.Count + 1)];
+            var pieCategoryAddress = pieChartWorksheet.Cells["I2:I" + (difficultyDistribution.Count + 1)];
+
+            // Create and insert the pie chart into column L
+            CreatePieChart(pieChartWorksheet, "Difficulty Distribution", pieSeriesAddress, pieCategoryAddress);
+            pieChartWorksheet.Row(1).Height = 20; // Adjust the height based on your preference
+
+        }
+
+        private void ExportChartsToExcel(ExcelPackage package, List<Problem> problems)
+        {
+            var dataWorksheet = package.Workbook.Worksheets[0]; // Assuming data is in the first sheet
+
+            // Add Frequency chart
+            var frequencyChartWorksheet = package.Workbook.Worksheets.Add("FrequencyChart");
+            var frequencySeriesAddress = dataWorksheet.Cells[2, 3, problems.Count + 1, 3];
+            var frequencyCategoryAddress = dataWorksheet.Cells[2, 1, problems.Count + 1, 1];
+            CreateBarChart(frequencyChartWorksheet, "Frequency Bar Chart", frequencySeriesAddress, frequencyCategoryAddress, System.Drawing.Color.LightBlue, "Frequency");
+
+            // Add Timing chart
+            var timingChartWorksheet = package.Workbook.Worksheets.Add("TimingChart");
+            var timingSeriesAddress = dataWorksheet.Cells[2, 6, problems.Count + 1, 6];
+            var timingCategoryAddress = dataWorksheet.Cells[2, 1, problems.Count + 1, 1];
+            CreateBarChart(timingChartWorksheet, "Timing Bar Chart", timingSeriesAddress, timingCategoryAddress, System.Drawing.Color.LightPink, "Timing");
+
+            // Add Radar chart
+            var radarChartWorksheet = package.Workbook.Worksheets.Add("RadarChart");
+            var radarSeriesAddress = dataWorksheet.Cells[2, 3, problems.Count + 1, 3]; // Assuming "Title" is in column 2, and "Frequency" is in column 3
+            var radarCategoryAddress = dataWorksheet.Cells[2, 1, problems.Count + 1, 1]; // Assuming "Title" is in column 1
+            CreateRadarChart(radarChartWorksheet, "Radar Chart", radarSeriesAddress, radarCategoryAddress);
+
+            // Create Difficulty Statistic Table
+            CreateDiffStatTable(package, problems);
+        }
+
         public ActionResult ExportToExcel()
         {
             var problems = _databaseContext.Problems.ToList();
             if (problems != null)
             {
-                // Create Excel package
                 using (var package = new ExcelPackage())
                 {
-                    // Add a worksheet for the data
-                    var dataWorksheet = package.Workbook.Worksheets.Add("ProblemsData");
+                    ExportDataToExcel(package, problems);
+                    ExportChartsToExcel(package, problems);
 
-                    // Add headers
-                    var headers = new List<string> { "Title", "Tag", "Frequency", "Difficulty", "Last Update", "Timing" };
-                    for (var i = 0; i < headers.Count; i++)
-                    {
-                        var cell = dataWorksheet.Cells[1, i + 1];
-                        cell.Value = headers[i];
-                        cell.Style.Font.Bold = true;
-                        cell.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
-                    }
-
-                    // Populate data worksheet with data
-                    for (var i = 0; i < problems.Count; i++)
-                    {
-                        var problem = problems[i];
-                        dataWorksheet.Cells[i + 2, 1].Value = problem.Title;
-                        dataWorksheet.Cells[i + 2, 2].Value = problem.Tag;
-                        dataWorksheet.Cells[i + 2, 3].Value = problem.Frequency;
-                        dataWorksheet.Cells[i + 2, 4].Value = problem.Difficulty;
-                        dataWorksheet.Cells[i + 2, 5].Value = problem.LastUpdate.ToString();
-                        dataWorksheet.Cells[i + 2, 6].Value = problem.Timing;
-
-                        // Apply row color based on difficulty
-                        ApplyRowColor(dataWorksheet, i + 2, problem.Difficulty);
-                    }
-
-                    // Apply borders to the entire table
-                    var tableRange = dataWorksheet.Cells[dataWorksheet.Dimension.Address];
-                    var tableBorder = tableRange.Style.Border;
-                    tableBorder.Top.Style = ExcelBorderStyle.Thin;
-                    tableBorder.Bottom.Style = ExcelBorderStyle.Thin;
-                    tableBorder.Left.Style = ExcelBorderStyle.Thin;
-                    tableBorder.Right.Style = ExcelBorderStyle.Thin;
-
-                    // Format "Last Update" column as DateTime
-                    dataWorksheet.Column(5).Style.Numberformat.Format = "yyyy-MM-dd hh:mm:ss";
-
-                    // Enable sorting for the data worksheet
-                    dataWorksheet.Cells["A1:F1"].AutoFilter = true;
-
-                    // Auto-expand columns for the data worksheet
-                    dataWorksheet.Cells[dataWorksheet.Dimension.Address].AutoFitColumns();
-
-                    // Add a new worksheet for the chart
-                    var chartWorksheet = package.Workbook.Worksheets.Add("FrequencyChart");
-
-                    // Create a bar chart based on frequency in the chart worksheet
-                    var chart = chartWorksheet.Drawings.AddChart("FrequencyBarChart", eChartType.BarClustered);
-                    chart.SetPosition(0, 7, 0, 0);
-
-                    // Calculate the height based on the number of data points
-                    var chartHeight = Math.Max(400, problems.Count * 20); // Adjust 20 based on your preference
-                    chart.SetSize(600, chartHeight);
-
-                    chart.Title.Text = "Frequency Bar Chart";
-                    chart.Series.Add(dataWorksheet.Cells["C2:C" + (problems.Count + 1)], dataWorksheet.Cells["A2:A" + (problems.Count + 1)]);
-
-                    // Add a new worksheet for the chart based on Timing
-                    var timingChartWorksheet = package.Workbook.Worksheets.Add("TimingChart");
-
-                    // Create a bar chart based on Timing in the chart worksheet
-                    var timingChart = timingChartWorksheet.Drawings.AddChart("TimingBarChart", eChartType.BarClustered);
-                    timingChart.SetPosition(0, 7, 0, 0);
-
-                    // Calculate the height based on the number of data points
-                    chartHeight = Math.Max(400, problems.Count * 20); // Adjust 20 based on your preference
-                    timingChart.SetSize(600, chartHeight);
-
-                    timingChart.Title.Text = "Timing Bar Chart";
-                    timingChart.Series.Add(dataWorksheet.Cells["F2:F" + (problems.Count + 1)], dataWorksheet.Cells["A2:A" + (problems.Count + 1)]);
-
-                    // Set content type and file name
                     var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     var fileName = $"CodeTrack_Export_{DateTime.Now.ToString("yyyy-MM-dd-HHmmss")}.xlsx";
-
-                    // Convert Excel package to byte array
                     byte[] fileContents = package.GetAsByteArray();
 
-                    // Return Excel file as response
                     return File(fileContents, contentType, fileName);
                 }
             }
+
             return Json(new { error = true, message = "Cannot Export" });
         }
 
