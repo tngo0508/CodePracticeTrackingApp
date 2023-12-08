@@ -3,32 +3,38 @@
 
 <div class="container">
     <h1>Problem List</h1>
-    @if (Model.hasData)
-    {
-        <a asp-controller="Problem" asp-action="DeleteAll" class="btn btn-primary btn-danger float-end my-3">
-            <i class="bi bi-trash3-fill"></i> Delele All
+    <div class="d-flex flex-row-reverse">
+        @if (Model.hasData)
+        {
+            <a asp-controller="Problem" asp-action="DeleteAll" class="btn btn-primary btn-danger my-3">
+                <i class="bi bi-trash3-fill"></i> Delete All
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Problem" asp-action="CreateRandomData" class="btn btn-primary my-3">
+                <i class="bi bi-database-add"></i> Seed
+            </a>
+        }
+        <a asp-controller="Problem" asp-action="Upsert" class="btn btn-primary my-3 mx-2">
+            <i class="bi bi-plus-square"></i> Add
         </a>
-    }
-    else
-    {
-        <a asp-controller="Problem" asp-action="CreateRandomData" class="btn btn-primary float-end my-3">
-            <i class="bi bi-database-add"></i> Seed
-        </a>
-    }
-    <a asp-controller="Problem" asp-action="Upsert" class="btn btn-primary float-end m-3">
-        <i class="bi bi-plus-square"></i> Add
-    </a>
+        <form method="post" enctype="multipart/form-data" asp-controller="Problem" asp-action="ImportFromExcel" id="importForm">
+            <input type="file" name="file" id="file" accept=".xlsx, .xls" hidden onchange="submitForm()" />
+            <button class="btn btn-primary my-3" type="button" onclick="document.getElementById('file').click()">
+                <i class="bi bi-cloud-upload"></i> Import
+            </button>
+        </form>
+        @if (Model.hasData)
+        {
+            <a asp-controller="Problem" asp-action="ExportToExcel" class="btn btn-primary my-3 mx-2">
+                <i class="bi bi-cloud-download"></i> Export
+            </a>
+        }
+    </div>
 
-    <a asp-controller="Problem" asp-action="ExportToExcel" class="btn btn-primary float-end my-3">
-        <i class="bi bi-cloud-download"></i> Export
-    </a>
 
-    <form method="post" enctype="multipart/form-data" asp-controller="Problem" asp-action="ImportFromExcel" id="importForm">
-        <input class="btn btn-primary float-end m-3" type="file" name="file" id="file" accept=".xlsx, .xls" hidden onchange="submitForm()" />
-        <button class="btn btn-primary float-end m-3" type="button" onclick="document.getElementById('file').click()">
-            <i class="bi bi-cloud-upload"></i> Import
-        </button>
-    </form>
+    
 
     <table id="problem" class="table table-striped" style="width:100%">
         <thead>
