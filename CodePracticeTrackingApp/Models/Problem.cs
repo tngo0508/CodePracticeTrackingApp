@@ -25,5 +25,9 @@ namespace CodePracticeTrackingApp.Models
         public DateTime LastUpdate { get; set; }
         [DisplayName("Time (minutes)")]
         public double Timing { get; set; }
+
+        // Navigation property for the user
+        //public string UserId { get; set; }
+        //public ApplicationUser User { get; set; }
     }
 }

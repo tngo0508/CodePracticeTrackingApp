@@ -1,6 +1,7 @@
 ﻿using CodePracticeTrackingApp.Data;
 using CodePracticeTrackingApp.Models;
 using CodePracticeTrackingApp.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -15,6 +16,7 @@ using System.Net;
 
 namespace CodePracticeTrackingApp.Controllers
 {
+    [Authorize]
     public class ProblemController : Controller
     {
         private readonly DatabaseContext _databaseContext;
