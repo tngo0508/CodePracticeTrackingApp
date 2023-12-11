@@ -2,6 +2,7 @@
 using CodePracticeTrackingApp.Models;
 using CodePracticeTrackingApp.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -13,6 +14,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Net;
+using System.Security.Claims;
 
 namespace CodePracticeTrackingApp.Controllers
 {
@@ -28,16 +30,26 @@ namespace CodePracticeTrackingApp.Controllers
             // Set the LicenseContext before using any EPPlus functionality
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial; // or LicenseContext.Commercial
         }
-
-        public void SetSessionVm(DatabaseContext context)
+        private string GetCurrentUserId()
         {
-            var problemRecords = _databaseContext.Problems.ToList();
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return userId;
+        }
+
+        public void SetSessionVm(DatabaseContext context, string userId)
+        {
+            var problemRecords = _databaseContext.Problems
+                .Where(p => p.ApplicationUserId == userId)
+                .ToList();
+
             sessionVm.Problems = problemRecords;
             sessionVm.hasData = problemRecords.Any();
         }
         public IActionResult Index()
         {
-            SetSessionVm(_databaseContext);
+            var userId = GetCurrentUserId();
+            SetSessionVm(_databaseContext, userId);
             return View(sessionVm);
         }
         [HttpGet]
@@ -45,7 +57,10 @@ namespace CodePracticeTrackingApp.Controllers
         {
             try
             {
-                var problems = _databaseContext.Problems?.ToList();
+                var userId = GetCurrentUserId();
+                var problems = _databaseContext.Problems
+                .Where(p => p.ApplicationUserId == userId)
+                .ToList();
                 var formattedProblems = problems?.Select(x => new
                 {
                     id = x.Id,
@@ -68,6 +83,7 @@ namespace CodePracticeTrackingApp.Controllers
         [HttpGet]
         public IActionResult CreateRandomData()
         {
+            var userId = GetCurrentUserId();
             if (!_databaseContext.Problems.Any())
             {
                 _databaseContext.Problems.AddRange(
@@ -79,6 +95,7 @@ namespace CodePracticeTrackingApp.Controllers
                         Tag = "Tree",
                         Timing = SeedData.GenerateRandomTime(),
                         LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
                     },
                     new Problem
                     {
@@ -88,6 +105,7 @@ namespace CodePracticeTrackingApp.Controllers
                         Tag = "Hash Map",
                         Timing = SeedData.GenerateRandomTime(),
                         LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
                     },
                     new Problem
                     {
@@ -97,6 +115,7 @@ namespace CodePracticeTrackingApp.Controllers
                         Tag = "Dynamic Programming",
                         Timing = SeedData.GenerateRandomTime(),
                         LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
                     },
                     new Problem
                     {
@@ -106,6 +125,7 @@ namespace CodePracticeTrackingApp.Controllers
                         Tag = "Topological Sort",
                         Timing = SeedData.GenerateRandomTime(),
                         LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
                     },
                     new Problem
                     {
@@ -115,11 +135,12 @@ namespace CodePracticeTrackingApp.Controllers
                         Tag = "Disjoint Set",
                         Timing = SeedData.GenerateRandomTime(),
                         LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
                     }
                 );
             }
             _databaseContext.SaveChanges();
-            SetSessionVm(_databaseContext);
+            SetSessionVm(_databaseContext, userId);
             return View(nameof(Index), sessionVm);
         }
 
@@ -129,8 +150,10 @@ namespace CodePracticeTrackingApp.Controllers
         {
             try
             {
+                problemVm.Problem.ApplicationUserId = GetCurrentUserId();
                 if (ModelState.IsValid)
                 {
+                    var userId = GetCurrentUserId();
                     problemVm.Problem.LastUpdate = DateTime.Now;
                     if (problemVm.Problem.Id == 0)
                     {
@@ -144,23 +167,27 @@ namespace CodePracticeTrackingApp.Controllers
                         TempData["success"] = "Problem is updated successfully";
                     }
                     _databaseContext.SaveChanges();
-                    SetSessionVm(_databaseContext);
+                    SetSessionVm(_databaseContext, userId);
 
                     return RedirectToAction(nameof(Index), sessionVm);
                 }
             }
             catch (DataException)
             {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see Thomas Ngo via tngo0508@gmail.com");
             }
+            TempData["error"] = "There is an error. Please contact Thomas Ngo via tngo0508@gmail.com";
             return View(nameof(Upsert), problemVm);
         }
 
         [HttpGet]
         public IActionResult DeleteAll()
         {
+            var userId = GetCurrentUserId();
             // Retrieve all records from the table
-            var allRecords = _databaseContext.Problems.ToList();
+            var allRecords = _databaseContext.Problems
+                .Where(p => p.ApplicationUserId == userId)
+                .ToList();
 
             // Remove all records from the DbSet
             _databaseContext.Problems.RemoveRange(allRecords);
@@ -187,6 +214,7 @@ namespace CodePracticeTrackingApp.Controllers
             var query = _databaseContext.Problems.Where(x => x.Id == id);
             var problemVm = new ProblemVM { Problem = query.FirstOrDefault() };
             problemVm.Problem.Id = (int)id;
+            problemVm.Problem.ApplicationUserId = GetCurrentUserId();
             return View(problemVm);
         }
 
@@ -208,6 +236,7 @@ namespace CodePracticeTrackingApp.Controllers
         {
             try
             {
+                var userId = GetCurrentUserId();
                 var problem = _databaseContext.Problems.Find(id);
                 if (problem == null)
                 {
@@ -216,7 +245,7 @@ namespace CodePracticeTrackingApp.Controllers
                 }
                 _databaseContext.Problems.Remove(problem);
                 _databaseContext.SaveChanges();
-                SetSessionVm(_databaseContext);
+                SetSessionVm(_databaseContext, userId);
             }
             catch (Exception ex)
             {
@@ -489,7 +518,10 @@ namespace CodePracticeTrackingApp.Controllers
 
         public ActionResult ExportToExcel()
         {
-            var problems = _databaseContext.Problems.ToList();
+            var userId = GetCurrentUserId();
+            var problems = _databaseContext.Problems
+                .Where(p => p.ApplicationUserId == userId)
+                .ToList();
             if (problems != null)
             {
                 using (var package = new ExcelPackage())

@@ -27,7 +27,9 @@ namespace CodePracticeTrackingApp.Models
         public double Timing { get; set; }
 
         // Navigation property for the user
-        //public string UserId { get; set; }
-        //public ApplicationUser User { get; set; }
+        public string ApplicationUserId { get; set; }
+        [ForeignKey("ApplicationUserId")]
+        [ValidateNever]
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }
