@@ -83,64 +83,73 @@ namespace CodePracticeTrackingApp.Controllers
         [HttpGet]
         public IActionResult CreateRandomData()
         {
-            var userId = GetCurrentUserId();
-            if (!_databaseContext.Problems.Any())
+            try
             {
-                _databaseContext.Problems.AddRange(
-                    new Problem
-                    {
-                        Title = "Subtree of another subtree",
-                        Difficulty = "Easy",
-                        Frequency = SeedData.GenerateRandomFrequency(),
-                        Tag = "Tree",
-                        Timing = SeedData.GenerateRandomTime(),
-                        LastUpdate = SeedData.GenerateRandomDateTime(),
-                        ApplicationUserId = userId
-                    },
-                    new Problem
-                    {
-                        Title = "Two Sum",
-                        Difficulty = "Easy",
-                        Frequency = SeedData.GenerateRandomFrequency(),
-                        Tag = "Hash Map",
-                        Timing = SeedData.GenerateRandomTime(),
-                        LastUpdate = SeedData.GenerateRandomDateTime(),
-                        ApplicationUserId = userId
-                    },
-                    new Problem
-                    {
-                        Title = "Maximum Subarray Sum",
-                        Difficulty = "Medium",
-                        Frequency = SeedData.GenerateRandomFrequency(),
-                        Tag = "Dynamic Programming",
-                        Timing = SeedData.GenerateRandomTime(),
-                        LastUpdate = SeedData.GenerateRandomDateTime(),
-                        ApplicationUserId = userId
-                    },
-                    new Problem
-                    {
-                        Title = "Alien Dictionary",
-                        Difficulty = "Hard",
-                        Frequency = SeedData.GenerateRandomFrequency(),
-                        Tag = "Topological Sort",
-                        Timing = SeedData.GenerateRandomTime(),
-                        LastUpdate = SeedData.GenerateRandomDateTime(),
-                        ApplicationUserId = userId
-                    },
-                    new Problem
-                    {
-                        Title = "Number of Provinces",
-                        Difficulty = "Medium",
-                        Frequency = SeedData.GenerateRandomFrequency(),
-                        Tag = "Disjoint Set",
-                        Timing = SeedData.GenerateRandomTime(),
-                        LastUpdate = SeedData.GenerateRandomDateTime(),
-                        ApplicationUserId = userId
-                    }
-                );
+                var userId = GetCurrentUserId();
+                if (!_databaseContext.Problems.Where(p => p.ApplicationUserId == userId).Any())
+                {
+                    _databaseContext.Problems.AddRange(
+                        new Problem
+                        {
+                            Title = "Subtree of another subtree",
+                            Difficulty = "Easy",
+                            Frequency = SeedData.GenerateRandomFrequency(),
+                            Tag = "Tree",
+                            Timing = SeedData.GenerateRandomTime(),
+                            LastUpdate = SeedData.GenerateRandomDateTime(),
+                            ApplicationUserId = userId
+                        },
+                        new Problem
+                        {
+                            Title = "Two Sum",
+                            Difficulty = "Easy",
+                            Frequency = SeedData.GenerateRandomFrequency(),
+                            Tag = "Hash Map",
+                            Timing = SeedData.GenerateRandomTime(),
+                            LastUpdate = SeedData.GenerateRandomDateTime(),
+                            ApplicationUserId = userId
+                        },
+                        new Problem
+                        {
+                            Title = "Maximum Subarray Sum",
+                            Difficulty = "Medium",
+                            Frequency = SeedData.GenerateRandomFrequency(),
+                            Tag = "Dynamic Programming",
+                            Timing = SeedData.GenerateRandomTime(),
+                            LastUpdate = SeedData.GenerateRandomDateTime(),
+                            ApplicationUserId = userId
+                        },
+                        new Problem
+                        {
+                            Title = "Alien Dictionary",
+                            Difficulty = "Hard",
+                            Frequency = SeedData.GenerateRandomFrequency(),
+                            Tag = "Topological Sort",
+                            Timing = SeedData.GenerateRandomTime(),
+                            LastUpdate = SeedData.GenerateRandomDateTime(),
+                            ApplicationUserId = userId
+                        },
+                        new Problem
+                        {
+                            Title = "Number of Provinces",
+                            Difficulty = "Medium",
+                            Frequency = SeedData.GenerateRandomFrequency(),
+                            Tag = "Disjoint Set",
+                            Timing = SeedData.GenerateRandomTime(),
+                            LastUpdate = SeedData.GenerateRandomDateTime(),
+                            ApplicationUserId = userId
+                        }
+                    );
+                }
+                _databaseContext.SaveChanges();
+                SetSessionVm(_databaseContext, userId);
+                TempData["success"] = "Seed Data successfully";
             }
-            _databaseContext.SaveChanges();
-            SetSessionVm(_databaseContext, userId);
+            catch (Exception e)
+            {
+                TempData["error"] = "Seed Data failed.";
+            }
+            
             return View(nameof(Index), sessionVm);
         }
 
@@ -183,22 +192,31 @@ namespace CodePracticeTrackingApp.Controllers
         [HttpGet]
         public IActionResult DeleteAll()
         {
-            var userId = GetCurrentUserId();
-            // Retrieve all records from the table
-            var allRecords = _databaseContext.Problems
-                .Where(p => p.ApplicationUserId == userId)
-                .ToList();
-
-            // Remove all records from the DbSet
-            _databaseContext.Problems.RemoveRange(allRecords);
-
-            // Save changes to the database
-            _databaseContext.SaveChanges();
-            var sessionVm = new SessionVM
+            try
             {
-                Problems = null,
-                hasData = false
-            };
+                var userId = GetCurrentUserId();
+                // Retrieve all records from the table
+                var allRecords = _databaseContext.Problems
+                    .Where(p => p.ApplicationUserId == userId)
+                    .ToList();
+
+                // Remove all records from the DbSet
+                _databaseContext.Problems.RemoveRange(allRecords);
+
+                // Save changes to the database
+                _databaseContext.SaveChanges();
+                var sessionVm = new SessionVM
+                {
+                    Problems = null,
+                    hasData = false
+                };
+                TempData["success"] = "Delete all records successfully";
+                
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Failed to delete all records";
+            }
             return RedirectToAction(nameof(Index), sessionVm);
         }
 
