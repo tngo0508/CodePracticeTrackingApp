@@ -99,46 +99,276 @@ namespace CodePracticeTrackingApp.Controllers
                             LastUpdate = SeedData.GenerateRandomDateTime(),
                             ApplicationUserId = userId
                         },
-                        new Problem
-                        {
-                            Title = "Two Sum",
-                            Difficulty = "Easy",
-                            Frequency = SeedData.GenerateRandomFrequency(),
-                            Tag = "Hash Map",
-                            Timing = SeedData.GenerateRandomTime(),
-                            LastUpdate = SeedData.GenerateRandomDateTime(),
-                            ApplicationUserId = userId
-                        },
-                        new Problem
-                        {
-                            Title = "Maximum Subarray Sum",
-                            Difficulty = "Medium",
-                            Frequency = SeedData.GenerateRandomFrequency(),
-                            Tag = "Dynamic Programming",
-                            Timing = SeedData.GenerateRandomTime(),
-                            LastUpdate = SeedData.GenerateRandomDateTime(),
-                            ApplicationUserId = userId
-                        },
-                        new Problem
-                        {
-                            Title = "Alien Dictionary",
-                            Difficulty = "Hard",
-                            Frequency = SeedData.GenerateRandomFrequency(),
-                            Tag = "Topological Sort",
-                            Timing = SeedData.GenerateRandomTime(),
-                            LastUpdate = SeedData.GenerateRandomDateTime(),
-                            ApplicationUserId = userId
-                        },
-                        new Problem
-                        {
-                            Title = "Number of Provinces",
-                            Difficulty = "Medium",
-                            Frequency = SeedData.GenerateRandomFrequency(),
-                            Tag = "Disjoint Set",
-                            Timing = SeedData.GenerateRandomTime(),
-                            LastUpdate = SeedData.GenerateRandomDateTime(),
-                            ApplicationUserId = userId
-                        }
+                    new Problem
+                    {
+                        Title = "Two Sum",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Hash Map",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Maximum Subarray Sum",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Dynamic Programming",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                     new Problem
+                     {
+                         Title = "Alien Dictionary",
+                         Difficulty = "Hard",
+                         Frequency = SeedData.GenerateRandomFrequency(),
+                         Tag = "Topological Sort",
+                         Timing = SeedData.GenerateRandomTime(),
+                         LastUpdate = SeedData.GenerateRandomDateTime(),
+                         ApplicationUserId = userId
+                     },
+                    new Problem
+                    {
+                        Title = "Number of Provinces",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Disjoint Set",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Is Subsequence",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Two Pointers",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Move Zeroes",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Two Pointers",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Max Number of K-Sum Pairs",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Two Pointers",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Maximum Average Subarray I",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Sliding Window",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Maximum Number of Vowels in a Substring of Given Length",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Sliding Window",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Find the Highest Altitude",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Prefix Sum",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Find the Difference of Two Arrays",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Hash map",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Decode String",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Stack",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Asteroid Collision",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Stack",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Removing Stars From a String",
+                        Difficulty = "Hard",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Stack",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Number of Recent Calls",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Queue",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Dota2 Senate",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Queue",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Delete the Middle Node of a Linked List",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Linked List",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Maximum Depth of Binary Tree",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "DFS",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Leaf-Similar Trees",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "DFS",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Binary Tree Right Side View",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "BFS",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Search in a Binary Tree",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Delete Node in a BST",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Counting Bits",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Bit Manipulation",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Search Suggestion System",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Trie",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Unique Paths",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "DP",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Combination Sum III",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Backtracking",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Guess Number Higher or Lower",
+                        Difficulty = "Easy",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "Binary Search",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    },
+                    new Problem
+                    {
+                        Title = "Rotting Oranges",
+                        Difficulty = "Medium",
+                        Frequency = SeedData.GenerateRandomFrequency(),
+                        Tag = "BFS",
+                        Timing = SeedData.GenerateRandomTime(),
+                        LastUpdate = SeedData.GenerateRandomDateTime(),
+                        ApplicationUserId = userId
+                    }
                     );
                 }
                 _databaseContext.SaveChanges();
@@ -149,7 +379,7 @@ namespace CodePracticeTrackingApp.Controllers
             {
                 TempData["error"] = "Seed Data failed.";
             }
-            
+
             return View(nameof(Index), sessionVm);
         }
 
@@ -211,7 +441,7 @@ namespace CodePracticeTrackingApp.Controllers
                     hasData = false
                 };
                 TempData["success"] = "Delete all records successfully";
-                
+
             }
             catch (Exception ex)
             {

@@ -1,24 +1,24 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 /* Hide the AM/PM indicator */
@@ -36,27 +36,114 @@ input[type="time"] {
     -moz-appearance: textfield; /* Firefox */
 }
 
-/*#timer {
-    font-size: 2em;
-    margin-bottom: 20px;
-}
-
-#startButton,
-#pauseButton,
-#stopButton {
-    font-size: 1em;
-    padding: 10px;
-    margin: 5px;
-}
-
-#progressBar {
-    width: 100%;
-    height: 20px;
-    margin-top: 10px;
-}*/
-
 .full-width-container {
-/*    padding-left: 0;
+    /*    padding-left: 0;
     padding-right: 0;*/
     padding: 0
 }
+
+#video-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+}
+
+#second-wave {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 50vh;
+}
+
+#background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1;
+}
+
+.content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Adjust the opacity here */
+    z-index: 0;
+}
+
+#typed-output {
+    overflow-y: auto; /* Add a scrollbar if content exceeds container height */
+    max-height: 80vh; /* Maximum height for the container */
+    padding: 10px;
+    height: 7vh;
+    /*background-color: #f0f0f0;*/
+    width: 100%;
+}
+
+/*.chart-card {
+    display: inline-block;
+    width: 300px;
+    margin: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+}*/
+
+.card {
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.wave-divider {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    /*transform: rotate(180deg);*/ /* Flip the wave upside down */
+}
+
+ Custom style for the list item 
+.custom-list li {
+    position: relative;
+    list-style-type: none;
+    /*padding-left: 30px;*/  /*Adjust as needed */
+
+}
+
+/* Custom checkmark using ::before pseudo-element */
+.custom-list li::before {
+    content: '\2713';  /*Unicode checkmark character */
+    font-size: 1.2em;  /*Adjust as needed */
+    color: black;  /*Adjust color as needed*/ 
+    position: absolute;
+    left: 0;
+}
+
+.custom-list  {
+    position: relative;
+    display: inline-block;
+    /*padding-left: 1em;*/
+    list-style: none;
+    /*    left: 50%;
+    transform: translateX(-50%);*/
+} 
