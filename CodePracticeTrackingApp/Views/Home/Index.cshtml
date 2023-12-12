@@ -11,45 +11,205 @@
     ViewData["Title"] = "Home Page";
 }
 
-@* <div class="jumbotron text-center">
-    <h1 id="typed-output"></h1>
-</div> *@
-
-
-
 <div class="h-100">
     <div class="container-fluid full-width-container">
+        @* Video background section  *@
         <div class="row">
-            @* <video autoplay muted loop>
-                <source src="your-video.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video> *@
-            test
+            <div id="video-container">
+                <video id="background-video" autoplay muted loop>
+                    <source src="~/video/background-video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="overlay"></div>
+                <div class="content">
+                    <div class="jumbotron text-center">
+                        <h1 id="typed-output" class="text-white" style="min-height:10px"></h1>
+                        <p>
+                            Welcome to CodeTrack – Your Ultimate LeetCode Companion. Track your coding journey effortlessly with our powerful tool designed to streamline your LeetCode grinding process. Input your data, record your progress, and let CodeTrack revolutionize the way you conquer coding challenges.
+
+                            Unlock a world of insights with our advanced features! From frequency and timing displayed in sleek bar charts, to a pie chart revealing the distribution of difficulty levels, and a radar chart capturing problem characteristics – CodeTrack offers it all. Gain a comprehensive overview of your coding prowess and watch your skills soar to new heights. CodeTrack – where progress meets precision.
+                        </p>
+                    </div>
+                </div>
+
+                <svg class="wave-divider" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="white" fill-opacity="1" d="M0,256L60,240C120,224,240,192,360,176C480,160,600,160,720,176C840,192,960,224,1080,240C1200,256,1320,256,1380,256L1440,256L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+                </svg>
+            </div>
         </div>
-        <div class="row bg-success text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+        @* show charts section *@
+        <div class="row d-flex flex-column m-5 justify-content-center align-content-center">
+            <div class="row justify-content-center align-content-center pb-5">
+                <div class="col align-self-center justify-content-center">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+                            <ul class="custom-list">
+                                <li class="mb-5">Visualize the frequency of each problem</li>
+                                <li class="mb-5">Each bar represents a problem, and the height corresponds to the frequency</li>
+                                <li class="mb-5">Help identify which problems are more common</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-center justify-content-center align-content-center">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <canvas id="barChartDemo"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row bg-primary text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+        <div class="row d-flex flex-column m-5 justify-content-center align-content-center">
+            <div class="row justify-content-center align-content-center pb-5">
+                <div class="col text-center justify-content-center align-content-center">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <canvas id="radarChartDemo"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col align-self-center justify-content-center">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+                            <ul class="custom-list">
+                                <li class="mb-5">Identify Your Strength and Weakness</li>
+                                <li class="mb-5">Show Characteristics of problems</li>
+                                <li class="mb-5">Provide comprehensive Overview</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-flex flex-column m-5 justify-content-center align-content-center">
+            <div class="row justify-content-center align-content-center pb-5">
+                <div class="col align-self-center justify-content-center">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+                            <ul class="custom-list">
+                                <li class="mb-5">Show the distribution of problems based on difficulty</li>
+                                <li class="mb-5">Provide general overview of your progress</li>
+                                <li class="mb-5">Each slice represents a difficulty level, and the size corresponds to the number of problems in that difficulty category</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-center justify-content-center align-content-center">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <canvas id="pieChartDemo"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-flex flex-column m-5 justify-content-center align-content-center">
+            <div class="row justify-content-center align-content-center pb-5">
+                <div class="col text-center justify-content-center align-content-center">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <canvas id="bubbleChartDemo"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col align-self-center justify-content-center">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+                            <ul class="custom-list">
+                                <li class="mb-5">Compare progress based on frequency and timing data</li>
+                                <li class="mb-5">Visualize both frequency and timing in a single chart</li>
+                                <li class="mb-5">Each bubble represents a problem, and the position on the chart corresponds to the timing and frequency</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="second-wave">
+                <div class="wave-divider">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                        <path fill="#000d13" fill-opacity="1" d="M0,256L60,240C120,224,240,192,360,176C480,160,600,160,720,176C840,192,960,224,1080,240C1200,256,1320,256,1380,256L1440,256L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row text-white p-5" style="background-color: #000d13;">
+        <div class="container text-white">
+            <div class="row p-5">
+                <div class="col text-center">
+                    <h1 class="text-white">Optimize learning: speed up, share insights, and effortlessly track progress</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-6 my-auto">
+                            <h4 class="text-white">Export Report</h4>
+                            <h5 class="text-white">Swiftly generate progress reports in Excel format</h5>
+                            <p class="text-white pb-5">Track, visualize, and analyze your coding progress effortlessly with our report generation feature. Elevate your learning experience with insightful data analysis</p>
+
+                            <h4 class="text-white">Import Report</h4>
+                            <h5 class="text-white">Incorporate the capability to effortlessly import your reports</h5>
+                            <p class="text-white pb-5">Import and modify Excel reports effortlessly! Update your data and reupload for seamless progress tracking.</p>
+
+                            <h4 class="text-white">Build With</h4>
+                            <h5 class="text-white">Passion, Love, Enthusiasm</h5>
+                            <p class="text-white">This web application is developed utilizing ASP.NET Core 7, Chart.js, the DataTables API, and the EPPlus library. MySQL Server serves as the database, with data storage facilitated through Entity Framework</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row h-100 align-content-center justify-content-center">
+                        <div class="col-8 my-auto">
+  
+                            <div class="row">
+                                <img class="pb-3" src="~/img/demo-export-1.png" alt="demo-image-1">
+                            </div>
+                            <div class="row">
+                                <img src="~/img/demo-export-2.png" alt="demo-image-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 
-@section Scripts {
-    <script>
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     let typed = new Typed('#typed-output', {
-        //         strings: ["Welcome to CodeTrack!", "Solve Problems", "Track Progress", "Ace Interviews!"],
-        //         typeSpeed: 50,
-        //         backSpeed: 25,
-        //         startDelay: 500,
-        //         backDelay: 1000,
-        //         loop: true,
-        //     });
-        // });
 
-    </script>
+@section Scripts {
+    <script src="~/js/HomePage.js"></script>
 }
 
 
