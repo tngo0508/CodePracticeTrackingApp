@@ -1,8 +1,15 @@
 ﻿@model ProblemVM
+@using System.Security.Claims;
+@{
+    var claimsIdentity = (ClaimsIdentity)User.Identity;
+    var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+    Model.Problem.ApplicationUserId = userId;
+}
 
 <div>
     <form method="post" class="row">
         <input asp-for="Problem.Id" hidden /> @* need this to pass Id around for update operation *@
+        <input asp-for="Problem.ApplicationUserId" hidden />
         <div class="row">
             <div class="col-6">
                 <div class="form-floating my-3">

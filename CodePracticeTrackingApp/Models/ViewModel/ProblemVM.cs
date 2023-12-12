@@ -5,7 +5,6 @@ namespace CodePracticeTrackingApp.Models.ViewModel
 {
     public class ProblemVM
     {
-        [BindProperty]
         public Problem Problem { get; set; } = new Problem();
         public IEnumerable<SelectListItem> DifficultyList { get; set; } = new List<SelectListItem>()
         {

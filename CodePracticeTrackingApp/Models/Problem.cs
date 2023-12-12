@@ -25,5 +25,11 @@ namespace CodePracticeTrackingApp.Models
         public DateTime LastUpdate { get; set; }
         [DisplayName("Time (minutes)")]
         public double Timing { get; set; }
+
+        // Navigation property for the user
+        public string ApplicationUserId { get; set; }
+        [ForeignKey("ApplicationUserId")]
+        [ValidateNever]
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }
