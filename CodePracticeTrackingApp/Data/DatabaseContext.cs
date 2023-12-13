@@ -1,10 +1,11 @@
 ﻿using CodePracticeTrackingApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodePracticeTrackingApp.Data
 {
-    public class DatabaseContext : IdentityDbContext
+    public class DatabaseContext : IdentityDbContext<IdentityUser>
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
