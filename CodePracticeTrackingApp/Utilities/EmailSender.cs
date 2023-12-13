@@ -7,8 +7,8 @@ namespace CodePracticeTrackingApp.Utilities
     public class EmailSender : IEmailSender
     {
         public string SendGridSecret { get; set; }
-        //public EmailSender(IConfiguration _config) => SendGridSecret = _config.GetValue<string>("SendGrid:SecretKey");
-        public EmailSender(IConfiguration _config) => SendGridSecret = _config["SendGridSecret"];
+        public EmailSender(IConfiguration _config) => SendGridSecret = _config.GetValue<string>("SendGrid:SecretKey");
+        //public EmailSender(IConfiguration _config) => SendGridSecret = _config["SendGridSecret"];
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             // logic to send email
