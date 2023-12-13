@@ -6,12 +6,21 @@ using CodePracticeTrackingApp.Utilities;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore.Internal;
 using CodePracticeTrackingApp.Data.DBInitializer;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add Azure Key Vault configuration
+builder.Configuration.AddAzureKeyVault(
+    new Uri("https://CodeTrack.vault.azure.net/"),
+    new DefaultAzureCredential());
+
 // dependecy injection
 // tell .net to use EF and connect to SQL server 
-builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// using Azure Key Vault. The Key Vault Name is ConnectionString in this case
+builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration["ConnectionString"]));
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DatabaseContext>();
 //builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<DatabaseContext>();
