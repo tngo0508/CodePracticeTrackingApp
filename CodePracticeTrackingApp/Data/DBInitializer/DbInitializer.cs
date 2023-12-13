@@ -23,7 +23,7 @@ namespace CodePracticeTrackingApp.Data.DBInitializer
             // migration if they are not applied
             try
             {
-                if (_db.Database.GetPendingMigrations().Any())
+                if (_db.Database.GetPendingMigrations().Count() > 0)
                 {
                     _db.Database.Migrate();
                 }
