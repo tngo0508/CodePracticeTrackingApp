@@ -840,7 +840,9 @@ namespace CodePracticeTrackingApp.Controllers
                                     LastUpdate = DateTime.TryParse(worksheet.Cells[row, 5].Value?.ToString(), out var lastUpdate) ? lastUpdate : DateTime.Now,
 
                                     // Parsing Timing with double.TryParse
-                                    Timing = double.TryParse(worksheet.Cells[row, 6].Value?.ToString(), out var timing) ? timing : 0.0
+                                    Timing = double.TryParse(worksheet.Cells[row, 6].Value?.ToString(), out var timing) ? timing : 0.0,
+
+                                    ApplicationUserId = GetCurrentUserId()
                                 });
                             };
                             _databaseContext.Problems.AddRange(problemList);
