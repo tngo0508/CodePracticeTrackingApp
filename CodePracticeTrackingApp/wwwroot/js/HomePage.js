@@ -1,13 +1,13 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    let typed = new Typed('#typed-output', {
-        strings: ["<span>Welcome to CodeTrack</span>", "<span>Solve Problem</span>", "<span>Track Progress</span>", "<span>Check Statistic</span>", "<span>Ace Interview</span>"],
-        typeSpeed: 100,
-        backSpeed: 55,
-        startDelay: 500,
-        backDelay: 1000,
-        loop: true,
-        showCursor: false,
-    });
+    //let typed = new Typed('#typed-output', {
+    //    strings: ["<span>Welcome to CodeTrack</span>", "<span>Solve Problem</span>", "<span>Track Progress</span>", "<span>Check Statistic</span>", "<span>Ace Interview</span>"],
+    //    typeSpeed: 100,
+    //    backSpeed: 55,
+    //    startDelay: 500,
+    //    backDelay: 1000,
+    //    loop: true,
+    //    showCursor: false,
+    //});
 });
 // demo chart
 // Example data for charts

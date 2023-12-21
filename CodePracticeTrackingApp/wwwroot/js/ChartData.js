@@ -33,7 +33,12 @@ function createFrequencyChart(responseJson) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
+                x: {
+                    display: false,
+                },
                 y: {
                     beginAtZero: true,
                     max: responseJson.maxFrequency
@@ -110,6 +115,8 @@ function createDifficultyDistributionChart(responseJson) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             plugins: {
                 title: {
                     display: true,
@@ -145,7 +152,12 @@ function createTimingChart(responseJson) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
+                x: {
+                    display: false,
+                },
                 y: {
                     title: {
                         display: true,
@@ -209,6 +221,8 @@ function createBubbleChart(responsJson) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 x: {
                     title: {
@@ -328,6 +342,9 @@ function toggleFrequencyChartType() {
         },
         options: {
             scales: {
+                x: {
+                    display: false,
+                },
                 y: {
                     beginAtZero: true,
                     max: data.maxFrequency
@@ -384,6 +401,9 @@ function toggleTimingChartType() {
         },
         options: {
             scales: {
+                x: {
+                    display: false,
+                },
                 y: {
                     beginAtZero: true,
                     max: Math.max(timings),
@@ -412,3 +432,12 @@ function toggleTimingChartType() {
         }
     });
 }
+
+window.addEventListener('resize', function () {
+   frequencyChart.resize();
+   timingBarChart.resize();
+   timingChart.resize();
+   radarChart.resize();
+   difficultyChart.resize();
+   bubbleChart.resize();
+});
