@@ -15,6 +15,7 @@ namespace CodePracticeTrackingApp.Models
         [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only alphabet is allowed")]
         public string Title { get; set; }
         [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Only alphabet is allowed")]
+        [Display(Name = "Topic")]
         public string? Tag { get; set; }
         [DefaultValue(0)]
         public int Frequency { get; set; } = 0;
@@ -23,7 +24,7 @@ namespace CodePracticeTrackingApp.Models
         [DataType(DataType.Date)]
         [DisplayName("Last Update")]
         public DateTime LastUpdate { get; set; }
-        [DisplayName("Time (minutes)")]
+        [DisplayName("Duration (minutes)")]
         public double Timing { get; set; }
 
         // Navigation property for the user
