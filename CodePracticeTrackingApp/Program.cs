@@ -10,18 +10,25 @@ using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Azure Key Vault configuration
-var KeyVaultUrl = new Uri(builder.Configuration.GetSection("KeyVaultUrl").Value!);
-var azureCredential = new DefaultAzureCredential();
+if (builder.Environment.IsDevelopment())
+{
+    // dependecy injection
+    // tell .net to use EF and connect to SQL server 
+    builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
+else
+{
+    // Add Azure Key Vault configuration
+    var KeyVaultUrl = new Uri(builder.Configuration.GetSection("KeyVaultUrl").Value!);
+    var azureCredential = new DefaultAzureCredential();
 
-builder.Configuration.AddAzureKeyVault(KeyVaultUrl, azureCredential);
+    builder.Configuration.AddAzureKeyVault(KeyVaultUrl, azureCredential);
 
-// dependecy injection
-// tell .net to use EF and connect to SQL server 
-//builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    // using Azure Key Vault. The Key Vault Name is ConnectionString in this case
+    builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration["ConnectionString"]));
+}
 
-// using Azure Key Vault. The Key Vault Name is ConnectionString in this case
-builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration["ConnectionString"]));
+
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DatabaseContext>();
 //builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<DatabaseContext>();
