@@ -12,31 +12,31 @@
         <input asp-for="Problem.ApplicationUserId" hidden />
         <div class="row">
             <div class="col-6">
-                <div class="form-floating my-3">
-                    <input asp-for="Problem.Title" type="text" class="form-control" />
+                <div class="my-3">
                     <label asp-for="Problem.Title"></label>
+                    <input asp-for="Problem.Title" type="text" class="form-control" placeholder="Enter the title of the problem"/>
                     <span asp-validation-for="Problem.Title" class="text-danger"></span>
                 </div>
-                <div class="form-floating my-3">
-                    <input asp-for="Problem.Tag" type="text" class="form-control" />
+                <div class="my-3">
                     <label asp-for="Problem.Tag"></label>
+                    <input asp-for="Problem.Tag" type="text" class="form-control" placeholder="Enter the topic/tag (e.g., hash map, tree, etc.)" />
                     <span asp-validation-for="Problem.Tag" class="text-danger"></span>
                 </div>
-                <div class="form-floating my-3">
-                    <input asp-for="Problem.Frequency" type="text" class="form-control" />
+                <div class="my-3">
                     <label asp-for="Problem.Frequency"></label>
+                    <input asp-for="Problem.Frequency" type="text" class="form-control" placeholder="Enter number of attempts to solve the problem" value="Enter number of attempts to solve the problem" />
                     <span asp-validation-for="Problem.Frequency" class="text-danger"></span>
                 </div>
-                <div class="form-floating my-3">
-                    <input asp-for="Problem.Timing" type="text" class="form-control" />
+                <div class="my-3">
                     <label asp-for="Problem.Timing"></label>
+                    <input asp-for="Problem.Timing" type="text" class="form-control" placeholder="Enter the time it takes to solve the problem in minutes" value="Enter the time it takes to solve the problem in minutes" />
                     <span asp-validation-for="Problem.Timing" class="text-danger"></span>
                 </div>
-                <div class="form-floating my-3">
+                <div class="my-3">
+                    <label asp-for="Problem.Difficulty"></label>
                     <select asp-for="Problem.Difficulty" asp-items="@Model.DifficultyList" class="form-select">
                         <option disabled selected>Select Level</option>
                     </select>
-                    <label asp-for="Problem.Difficulty"></label>
                     <span asp-validation-for="Problem.Difficulty" class="text-danger"></span>
                 </div>
                 <hr />
